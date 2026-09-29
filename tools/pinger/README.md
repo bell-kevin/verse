@@ -100,20 +100,21 @@ dispatch. Put it back afterwards.
 
 ## Timing
 
-Four attempts, all landing on the same Denver day the page is built for:
+Five attempts, all landing on the same Denver day the page is built for:
 
-| When (UTC) | Denver (MDT / MST) | Who asks    |
-| ---------- | ------------------ | ----------- |
-| 08:10      | 02:10 / 01:10      | GitHub cron |
-| 14:40      | 08:40 / 07:40      | GitHub cron |
-| 16:25      | 10:25 / 09:25      | this worker |
-| 20:35      | 14:35 / 13:35      | GitHub cron |
+| When (UTC)    | Denver (MDT / MST) | Who asks    |
+| ------------- | ------------------ | ----------- |
+| 06:02 / 07:02 | 00:02              | `midnight.yml`, waiting on a runner since the evening |
+| 08:10         | 02:10 / 01:10      | GitHub cron |
+| 14:40         | 08:40 / 07:40      | GitHub cron |
+| 16:25         | 10:25 / 09:25      | this worker |
+| 20:35         | 14:35 / 13:35      | GitHub cron |
 
-The worker goes third, on purpose: it is the one that asks once GitHub has had
-two chances and taken neither, and it asks hours before GitHub's own third
+The worker goes fourth, on purpose: it is the one that asks once GitHub has had
+three chances and taken none, and it asks hours before GitHub's own last
 attempt would.
 
-That third GitHub attempt sits behind the worker for the morning the worker is
+That last GitHub attempt sits behind the worker for the morning the worker is
 the thing that is broken. An expired token answers `401` and dispatches
 nothing, and it does that quietly — so the last word of the day belongs to a
 scheduler that needs no credential anyone has to remember to renew.

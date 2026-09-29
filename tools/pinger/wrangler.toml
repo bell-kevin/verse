@@ -2,8 +2,9 @@ name = "verse-render-pinger"
 main = "worker.js"
 compatibility_date = "2026-05-01"
 
-# After the workflow's two morning attempts, not between them -- this is the
-# one that runs when GitHub has already had two chances and taken neither. The
+# After midnight.yml and the workflow's two morning attempts, not between them
+# -- this is the one that runs when GitHub has already had three chances and
+# taken none. The
 # workflow keeps a third at 20:35 UTC, behind this one, for the morning it is
 # this worker that is broken. 16:25 UTC is 10:25 MDT and 09:25 MST, so it is
 # the same Denver day the page is built for in either half of the year. A
