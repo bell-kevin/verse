@@ -1,0 +1,115 @@
+name: Roll the page over at midnight
+
+# A reader without JavaScript gets whichever day the page was last built for.
+# deploy.yml asks GitHub's scheduler for the new day at 08:10 UTC, the small
+# hours in Denver, and the scheduler starts a run when it has capacity: through
+# September 2026 that was between 11:48 and 16:42 UTC -- 05:48 to 10:42 in the
+# Denver morning, and after seven on most days. It dropped none of them. It ran
+# every one of them hours late, and a reader who opened the page before work
+# got yesterday.
+#
+# So this does not ask the scheduler for midnight. It asks for the evening
+# before, which the scheduler can be as late about as it likes, and then waits
+# for midnight on the runner: a sleep keeps time, where a schedule only queues.
+# At two minutes past midnight in Denver it dispatches deploy.yml, and a
+# dispatch is an API call that starts a run within seconds rather than when the
+# scheduler gets round to it. The runner sits idle for up to five and a half
+# hours a night doing this, which costs nothing on a public repository.
+#
+# deploy.yml's own three renders stay as they were, as the fallback for a night
+# GitHub drops both of these outright.
+on:
+  schedule:
+    # 01:45 UTC is 19:45 MDT and 18:45 MST, the evening before. Started on
+    # time, that is a wait of 4h17m in the summer and 5h17m in the winter,
+    # inside the six hours GitHub allows a job. Started late, it still rolls the
+    # page over by five in the morning so long as it begins by 11:00 UTC: nine
+    # and a quarter hours of slack, where September's worst was eight and a
+    # half.
+    - cron: "45 1 * * *"
+    # The same again two hours on, for a night GitHub drops the first outright
+    # rather than running it late, as it did on 2026-08-28 and 2026-08-31. On a
+    # night the first is already waiting, this one queues behind it (see
+    # concurrency), starts once the page has rolled over, finds it current and
+    # stops.
+    - cron: "45 3 * * *"
+  workflow_dispatch:
+
+# Its own group, never deploy.yml's "pages". A push to main has to deploy while
+# this sleeps, and a push arriving in "pages" cancels whatever is running there.
+concurrency:
+  group: midnight
+  cancel-in-progress: false
+
+jobs:
+  roll-over:
+    runs-on: ubuntu-latest
+    # GitHub's ceiling for a job on a hosted runner, stated so the cap on the
+    # sleep below has something to be measured against.
+    timeout-minutes: 360
+    # A dispatch is an Actions write, and it is the only thing this job does to
+    # the repository. The render and its commit happen in deploy.yml, under
+    # deploy.yml's permissions.
+    permissions:
+      actions: write
+    env:
+      # Every `date` below answers in Denver. Must match --timezone in
+      # tools/build_daily.py; change them together.
+      TZ: America/Denver
+      SITE_URL: "https://bell-kevin.github.io/verse/"
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Wait for midnight in Denver
+        run: |
+          # Started in the morning, it is already past midnight -- GitHub ran it
+          # late, or it queued behind the run that did the waiting. There is
+          # nothing to wait for; the next step looks at the page.
+          if [ "$(date +%-H)" -lt 12 ]; then
+            echo "It is already $(date '+%H:%M %Z'); not waiting."
+            exit 0
+          fi
+          wake=$(date -d "$(date -d tomorrow +%F) 00:02" +%s)
+          delay=$(( wake - $(date +%s) ))
+          # Five and a half hours, which leaves the rest of the six for the
+          # dispatch and the twenty minutes of watching the render go live. In
+          # practice only a run started by hand in the afternoon is this early.
+          if [ "$delay" -gt $(( 330 * 60 )) ]; then
+            echo "Midnight is $(( delay / 60 )) minutes off, longer than a job can wait; not waiting."
+            exit 0
+          fi
+          echo "Waiting $(( delay / 60 )) minutes, until $(date -d "@$wake" '+%F %H:%M %Z')."
+          sleep "$delay"
+
+      - name: Ask for the render if the page is behind
+        run: |
+          # The day the page as served was built for: the attribute
+          # assets/app.js reads, fetched through the same CDN readers are.
+          served_for() {
+            curl -fsS --retry 2 --max-time 20 "$SITE_URL" |
+              grep -oP '<body[^>]*\sdata-built-for="\K\d{4}-\d{2}-\d{2}' || true
+          }
+          today=$(date +%F)
+          if [ "$(served_for)" = "$today" ]; then
+            echo "The page is already built for $today."
+            exit 0
+          fi
+          gh workflow run deploy.yml --ref main
+          echo "Asked deploy.yml for the page for $today."
+          # Watch it go live, so the second start -- queued behind this one --
+          # finds the page current instead of asking again, and so a render
+          # that fails shows up here too, on the run that asked for it. Twenty
+          # minutes, because the render takes one or two and Pages' CDN can
+          # hold on to the old page for ten after that: it is served with
+          # max-age=600, and a query string does not get past it.
+          deadline=$(( $(date +%s) + 20 * 60 ))
+          while [ "$(date +%s)" -lt "$deadline" ]; do
+            sleep 20
+            if [ "$(served_for)" = "$today" ]; then
+              echo "The page is live for $today."
+              exit 0
+            fi
+          done
+          seen=$(served_for)
+          echo "::error::Asked for the page for $today; 20 minutes on, the site is still serving the page for ${seen:-a day it could not read}."
+          exit 1

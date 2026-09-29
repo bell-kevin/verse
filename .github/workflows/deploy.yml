@@ -4,9 +4,13 @@ on:
   push:
     branches: [main]
   schedule:
-    # Roll the page on to the new day. 08:10 UTC is just after midnight in
-    # America/Denver, the timezone the page is built for; change both together.
-    # This job re-renders from the prebuilt calendar and fetches nothing.
+    # Roll the page on to the new day, if midnight.yml has not already. That
+    # workflow waits on a runner for midnight in Denver and dispatches this one,
+    # because GitHub starts this schedule hours late -- see there. These three
+    # are the fallback for a night it does not run. 08:10 UTC is the small hours
+    # in America/Denver, the timezone the page is built for; change both
+    # together. This job re-renders from the prebuilt calendar and fetches
+    # nothing.
     - cron: "10 8 * * *"
     # The same render again, six and a half hours later. GitHub runs a
     # schedule when it has capacity and is free to drop one outright: the

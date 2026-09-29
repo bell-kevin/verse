@@ -65,6 +65,7 @@ should not have to sign in to get it either.
 | `assets/style.css` | The styling. |
 | `assets/speakers/` | Speaker photos, downloaded at build time and committed. |
 | `.github/workflows/deploy.yml` | The scheduled builds and the Pages deployment. |
+| `.github/workflows/midnight.yml` | Waits for midnight in Denver, then asks `deploy.yml` for the new day's page. |
 | `.github/dependabot.yml` | Opens a pull request when one of the workflow's actions has a new major. |
 | `.cache/` | Memoised API responses. Not served, not committed; safe to delete. |
 
@@ -821,17 +822,32 @@ stay put, the date shown next to them is the date they belong to, and a short
 notice says which day the page is showing — so the page never claims a reading
 is today's when it isn't.
 
-Scheduled runs of `.github/workflows/deploy.yml` keep it current:
+The page moves on to the new day at **two minutes past midnight in
+`America/Denver`**, the timezone it is built for, so it is current long before
+anyone gets up to read it. `.github/workflows/midnight.yml` does that: it is
+scheduled for the evening before — 01:45 UTC, and again at 03:45 in case GitHub
+drops the first — and it sleeps on the runner until midnight, then asks
+`.github/workflows/deploy.yml` for a render.
 
-- **daily**, at 08:10, 14:40 and 20:35 UTC — the first is the small hours in
-  `America/Denver`, the timezone the page is built for, and the other two are
-  the morning and the afternoon of that same Denver day. Each re-renders the
-  page for the new day from the calendar already in the repository, and fetches
-  nothing. Three attempts rather than one because GitHub runs a scheduled
-  workflow when it has capacity and is free to drop one outright, which it has
-  done: a render that already happened writes the same bytes and commits
-  nothing, so the later attempts cost half a minute each and matter only on the
-  mornings GitHub skips.
+It waits on a runner rather than asking GitHub's scheduler for midnight because
+the scheduler starts a run when it has capacity, and in practice that is hours
+late: through September 2026 the render scheduled for 08:10 UTC started
+between 05:48 and 10:42 in the Denver morning, and after seven on most days. A
+sleep keeps time, and a dispatch starts a run within seconds, so it no longer
+matters how late the evening start is — it has until five in the morning to
+begin.
+
+Alongside it, scheduled runs of `.github/workflows/deploy.yml` keep it current:
+
+- **daily**, at 08:10, 14:40 and 20:35 UTC — the fallback for a night the
+  midnight render does not happen. The first is the small hours in Denver and
+  the other two are the morning and the afternoon of that same Denver day. Each
+  re-renders the page for the new day from the calendar already in the
+  repository, and fetches nothing. Three attempts rather than one because
+  GitHub runs a scheduled workflow when it has capacity and is free to drop one
+  outright, which it has done: a render that already happened writes the same
+  bytes and commits nothing, so the later attempts cost half a minute each and
+  matter only on the mornings GitHub skips.
 - **Mondays and Thursdays**, at 09:00 UTC — a full refetch, to extend the
   calendar and pick up a newly published conference or manual.
 
@@ -844,10 +860,10 @@ does not change, and the chapters are about 930 of the run's 1,100 requests.
 The conference and manual pages are thrown away before each build, since those
 are how a new conference or a new year's manual gets noticed at all.
 
-Because the daily job is what moves a no-JavaScript page on to the next day, the
-site depends on it running. The calendar is built two years ahead, so a missed
-run costs you the right day, never the whole site. `tools/pinger/` is an
-optional fourth attempt that runs on somebody else's scheduler: it reads the
+Because a render is what moves a no-JavaScript page on to the next day, the site
+depends on one of these running. The calendar is built two years ahead, so a
+missed run costs you the right day, never the whole site. `tools/pinger/` is an
+optional further attempt that runs on somebody else's scheduler: it reads the
 page as served, and asks GitHub for a render only when the day on it is stale.
 
 ## Running it yourself
@@ -883,8 +899,8 @@ python tools/build_daily.py \
 `--manual` is an override for testing; leave it alone and the four-year cycle
 picks the manuals on its own.
 
-`--timezone` and the daily cron in `.github/workflows/deploy.yml` need to agree;
-change them together.
+`--timezone`, the daily cron in `.github/workflows/deploy.yml` and the `TZ` in
+`.github/workflows/midnight.yml` need to agree; change them together.
 
 A full build makes about 1,100 requests and takes a few minutes on a cold
 cache. Responses are memoised under `.cache/`; delete it to force a clean fetch.
