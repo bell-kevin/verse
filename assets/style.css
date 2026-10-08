@@ -190,6 +190,13 @@ blockquote {
   font-style: italic;
 }
 
+/* A talk taught in long paragraphs is quoted at length rather than not at all,
+   and set a step smaller on the same terms as a long scripture passage. */
+.quote--long {
+  font-size: clamp(.97rem, 2.2vw, 1.06rem);
+  line-height: 1.56;
+}
+
 /* A hanging open-quote, kept out of the text flow so it never shifts the
    first line's left edge. */
 .quote::before {

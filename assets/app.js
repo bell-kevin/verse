@@ -224,17 +224,19 @@
   }
 
   /* A scripture mastery passage is quoted whole and can run to several verses,
-     so a long reading is set a step smaller -- the same threshold the builder
-     uses when it bakes the markup, so a swapped-in day looks like a built one. */
+     and a talk taught in long paragraphs is quoted at length, so a long reading
+     is set a step smaller -- the same threshold the builder uses when it bakes
+     the markup, so a swapped-in day looks like a built one. */
   var LONG_READING = 420;
 
-  function setReading(id, text) {
+  function setReading(id, text, kind) {
     var el = document.getElementById(id);
     if (!el) return;
+    kind = kind || "scripture";
     el.textContent = text || "";
     el.className = (text || "").length > LONG_READING
-      ? "scripture scripture--long"
-      : "scripture";
+      ? kind + " " + kind + "--long"
+      : kind;
   }
 
   function setHidden(id, hidden) {
@@ -311,7 +313,7 @@
     }
 
     if (entry.quote) {
-      setText("quote-text", entry.quote.text);
+      setReading("quote-text", entry.quote.text, "quote");
       setText("quote-speaker", entry.quote.speaker);
       setText("quote-talk", entry.quote.talk);
       setText("quote-session", entry.quote.session);

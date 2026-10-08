@@ -1765,6 +1765,24 @@ QUOTE_FLOOR = 1.0
 # anything. Roughly two gospel words, or one invitation. See `quote_substance`.
 QUOTE_SUBSTANCE_FLOOR = 2.0
 
+# The fewest quotes a talk is given, where it has them to give. A quota of three
+# or more has every talk heard from so long as it has three paragraphs a card
+# holds comfortably, and a speaker who teaches in long paragraphs may not.
+# President Christofferson's October 2026 talk, on gambling, put its teaching in
+# paragraphs of 440 to 680 characters, and what it had under 420 was statistics,
+# a news report and the stories around them, so it went unquoted; Elder
+# Soares's talk on the fast, twelve of whose fifteen paragraphs run long, was
+# down to one. A talk short of this is made up to it from its paragraphs of up
+# to LONG_QUOTE characters, which every other rule still judges, and the card
+# sets them a step smaller (see LONG_READING).
+TALK_MINIMUM = 3
+LONG_QUOTE = 600
+
+# What a paragraph is charged for running past 300 characters; see
+# `quote_score`. One let in at length has had its length conceded already, so
+# the score floor is applied to it without the charge.
+LENGTHY_COST = 1.5
+
 
 def speaker_rank(role: str) -> str:
     for name, pattern in SPEAKER_RANKS:
@@ -1907,7 +1925,7 @@ def quote_score(text: str) -> float:
     if 130 <= len(text) <= 260:
         score += 2.5
     elif len(text) > 300:
-        score -= 1.5
+        score -= LENGTHY_COST
     # Numbers and dense proper nouns mean a report or an anecdote, not counsel.
     score -= 1.5 * len(re.findall(r"\b\d{2,}\b|\bpercent\b", text))
     score -= 0.5 * len(proper_nouns(text))
@@ -2064,7 +2082,7 @@ NARRATED_REPLY = re.compile(
     r"exclaimed)\b", re.I)
 
 
-def is_quotable_paragraph(text: str) -> bool:
+def is_quotable_paragraph(text: str, longest: int = 420) -> bool:
     """Whether a paragraph can stand alone at all.
 
     This asks only whether a paragraph is disqualified -- a fragment, a
@@ -2073,8 +2091,11 @@ def is_quotable_paragraph(text: str) -> bool:
     is what keeps the best of a talk in contention: rejecting everything a
     little suspect here starved the ranking, and hit the plainest speakers
     hardest.
+
+    `longest` is raised only to make a talk up to TALK_MINIMUM, and nothing
+    else is relaxed for it.
     """
-    if not 90 <= len(text) <= 420:
+    if not 90 <= len(text) <= longest:
         return False
     # A whole sentence, closing a quotation or not. The Church typesets its
     # quotation marks curly, so the curly ones are what a paragraph actually
@@ -2162,6 +2183,29 @@ def is_quotable_paragraph(text: str) -> bool:
     return not text.startswith(("“", '"'))
 
 
+def take_quotes(candidates: list[dict], at_length: list[dict],
+                quota: int) -> list[dict]:
+    """The quotes one talk gives the calendar.
+
+    Only the best of a talk, and how many depends on whose talk it is. Every
+    quota is several deep, so a talk with anything above the floor is heard
+    from -- no speaker who stood at that pulpit and taught goes unquoted,
+    however the scoring happened to fall. A talk whose paragraphs a card holds
+    comfortably number fewer than TALK_MINIMUM is made up to it from
+    `at_length`, the ones that pass every rule but their length.
+
+    A closing sorts below every other paragraph however it scored, so a talk
+    with anything else to offer is never quoted by its last line -- and one
+    with nothing else still gets its turn.
+    """
+    def best_first(quotes: list[dict]) -> list[dict]:
+        return sorted(quotes, key=lambda q: (q["closing"], -q["score"]))
+
+    chosen = best_first(candidates)[:quota]
+    short = min(TALK_MINIMUM, quota) - len(chosen)
+    return chosen + best_first(at_length)[:max(short, 0)]
+
+
 def build_quote_pool(count: int = 1) -> list[dict]:
     sessions = resolve_conferences(count)
     if not sessions:
@@ -2202,34 +2246,37 @@ def build_quote_pool(count: int = 1) -> list[dict]:
             paragraphs = talk_paragraphs(body)
             session = f"{'April' if month == 4 else 'October'} {year}"
             rank = speaker_rank(role_text)
-            candidates = []
+            # The paragraphs a card holds comfortably, and -- held back in case
+            # the talk has too few of those -- the ones that pass every rule
+            # but their length, up to LONG_QUOTE. See TALK_MINIMUM.
+            candidates: list[dict] = []
+            at_length: list[dict] = []
             for index, (pid, text) in enumerate(paragraphs):
-                if (is_quotable_paragraph(text)
-                        and quote_substance(text) >= QUOTE_SUBSTANCE_FLOOR
-                        and quote_score(text) >= QUOTE_FLOOR):
-                    candidates.append({
-                        "text": text,
-                        "speaker": speaker,
-                        "role": role_text,
-                        "talk": title,
-                        "session": session,
-                        "url": f"https://www.churchofjesuschrist.org/study{uri}"
-                               f"?lang=eng&id={pid}"
-                               f"{scroll_fragment(paragraphs, index)}",
-                        "score": quote_score(text),
-                        "closing": bool(BENEDICTION.search(text)),
-                    })
+                if quote_substance(text) < QUOTE_SUBSTANCE_FLOOR:
+                    continue
+                if is_quotable_paragraph(text):
+                    if quote_score(text) < QUOTE_FLOOR:
+                        continue
+                    pile = candidates
+                elif (is_quotable_paragraph(text, longest=LONG_QUOTE)
+                      and quote_score(text) + LENGTHY_COST >= QUOTE_FLOOR):
+                    pile = at_length
+                else:
+                    continue
+                pile.append({
+                    "text": text,
+                    "speaker": speaker,
+                    "role": role_text,
+                    "talk": title,
+                    "session": session,
+                    "url": f"https://www.churchofjesuschrist.org/study{uri}"
+                           f"?lang=eng&id={pid}"
+                           f"{scroll_fragment(paragraphs, index)}",
+                    "score": quote_score(text),
+                    "closing": bool(BENEDICTION.search(text)),
+                })
 
-            # Only the best of a talk, and how many depends on whose talk it is.
-            # Every quota is several deep, so a talk with anything above the
-            # floor is heard from -- no speaker who stood at that pulpit and
-            # taught goes unquoted, however the scoring happened to fall.
-            #
-            # A closing sorts below every other paragraph however it scored, so
-            # a talk with anything else to offer is never quoted by its last
-            # line -- and one with nothing else still gets its turn.
-            candidates.sort(key=lambda q: (q["closing"], -q["score"]))
-            for quote in candidates[:QUOTA[rank]]:
+            for quote in take_quotes(candidates, at_length, QUOTA[rank]):
                 found.append((uri, quote))
 
         quoted = {uri: talks[uri] for uri, _ in found}
@@ -2273,7 +2320,9 @@ MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July",
 
 # A mastery passage is quoted whole, and some of them run to several verses.
 # Past about this many characters the reading is set a little smaller so it
-# still reads as one block rather than overrunning the card.
+# still reads as one block rather than overrunning the card. A conference quote
+# runs this long only when its talk is made up to TALK_MINIMUM, and is set
+# smaller the same way.
 LONG_READING = 420
 
 
@@ -2283,6 +2332,10 @@ def esc(value: str) -> str:
 
 def scripture_class(text: str) -> str:
     return "scripture scripture--long" if len(text or "") > LONG_READING else "scripture"
+
+
+def quote_class(text: str) -> str:
+    return "quote quote--long" if len(text or "") > LONG_READING else "quote"
 
 
 def human_date(date: dt.date) -> str:
@@ -2396,7 +2449,7 @@ def render_cards(entry: dict) -> str:
 
   <section class="card" id="card-quote">
     <h2 class="card__label">General Conference <span>Quote of the Day</span></h2>
-    <blockquote class="quote" id="quote-text">{esc(quote.get('text', ''))}</blockquote>
+    <blockquote class="{quote_class(quote.get('text', ''))}" id="quote-text">{esc(quote.get('text', ''))}</blockquote>
     <figure class="portrait" id="quote-portrait"{'' if photo else ' hidden'}>
       <img id="quote-photo"{photo_src} alt="{photo_alt}" width="{PORTRAIT_WIDTH}" height="{PORTRAIT_WIDTH * 9 // 16}" loading="lazy" decoding="async">
     </figure>

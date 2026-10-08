@@ -300,6 +300,40 @@ def _():
     return (builder.scripture_class("x" * 420), builder.scripture_class("x" * 421))
 
 
+@case("a long quote is set a step smaller too", ("quote", "quote quote--long"))
+def _():
+    return (builder.quote_class("x" * 420), builder.quote_class("x" * 421))
+
+
+# ---------- how many quotes a talk gives ----------
+
+def _quote(name, score, closing=False):
+    return {"text": name, "score": score, "closing": closing}
+
+
+def _names(quotes):
+    return [q["text"] for q in quotes]
+
+
+@case("a talk takes its best, up to its quota, closing last", ["b", "a", "amen"])
+def _():
+    candidates = [_quote("amen", 9, closing=True), _quote("a", 2), _quote("b", 5)]
+    return _names(builder.take_quotes(candidates, [], quota=7))
+
+
+@case("a talk short of the minimum is made up from its long paragraphs",
+      ["short", "long best", "long next"])
+def _():
+    at_length = [_quote("long next", 3), _quote("long best", 6), _quote("long last", 1)]
+    return _names(builder.take_quotes([_quote("short", 1)], at_length, quota=9))
+
+
+@case("a talk with enough never reaches for a long paragraph", ["a", "b", "c"])
+def _():
+    candidates = [_quote("a", 5), _quote("b", 4), _quote("c", 3)]
+    return _names(builder.take_quotes(candidates, [_quote("long", 99)], quota=3))
+
+
 @case("a share block is the reading, the credit, the link", "text\n\nAlma 32:21\n\nhttps://x")
 def _():
     return builder.share_text("text", "Alma 32:21", "https://x")

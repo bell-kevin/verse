@@ -430,9 +430,10 @@ not anything worth quoting — and each paragraph is asked the same two question
 the verses are.
 
 **Can it stand alone at all?** A paragraph is dropped if it is outside 90–420
-characters, if it does not end in a full stop (or a question or exclamation
-mark, with or without a closing quotation mark after it), or if it is one of the
-things that only makes sense next to the paragraph before it:
+characters (600, for a talk that would otherwise be quoted fewer than three
+times; see below), if it does not end in a full stop (or a question or
+exclamation mark, with or without a closing quotation mark after it), or if it
+is one of the things that only makes sense next to the paragraph before it:
 
 - an opener that continues a thought — *But…*, *So…*, *However…*, *That…*,
   *He…*, *They…*, *I was…*, *After…*. This card has refused paragraphs on this
@@ -573,11 +574,21 @@ the ones members return to, so his talk gives up to **12**; a counselor in the
 First Presidency **9**; a member of the Quorum of the Twelve **7**; everyone
 else **3**. Every quota is several deep, so any talk with something to say is
 heard from — no speaker who stood at that pulpit and taught goes unquoted,
-however the scoring happened to fall. What a quota cannot do is find a paragraph
-that is not there. A talk whose teaching all runs longer than a card holds, with
-nothing shorter left but statistics and the stories around them, goes unquoted
-rather than be represented by its weakest paragraph. President Christofferson's
-October 2026 talk, on gambling, is one.
+however the scoring happened to fall.
+
+What a quota cannot do is find a paragraph that is not there, and a speaker who
+teaches in long paragraphs may not have three that a card holds comfortably.
+President Christofferson's October 2026 talk, on gambling, put its teaching in
+paragraphs of 440 to 680 characters, and what it had under 420 was statistics,
+a news report and the stories around them; Elder Soares's talk on the fast,
+twelve of whose fifteen paragraphs run long, was down to one. So **every talk
+is quoted at least three times** where it has them to give. A talk short of
+that is made up from its paragraphs of up to 600 characters, which every rule
+above still judges — the floor below too, less the charge for running long,
+which has been conceded — and the card sets them a step smaller, as it does a
+long mastery passage. President Christofferson is heard from in his own words,
+*Today, I am pleading with all of us to live life on a higher plane*, instead
+of not at all.
 
 A floor of 1.0 applies before any quota does, and it matters more than it looks:
 a session's opening and closing are talks like any other to the filters above,
