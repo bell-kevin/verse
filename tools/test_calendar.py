@@ -194,37 +194,32 @@ def _():
     return [builder.bom_for(i, TIER, [])["reference"] for i in (6, 7, 8)]
 
 
-@case("spreading a pool keeps neighbours apart and loses nothing", (True, True, True))
-def _():
-    pool = [{"ref": f"{book} {n}"} for book in "abc" for n in range(4)]
-
-    def key(verse):
-        return verse["ref"].split()[0]
-
-    out = builder.spread(pool, seed=1, key=key)
-    again = builder.spread(pool, seed=1, key=key)
-    apart = all(key(x) != key(y) for x, y in zip(out, out[1:]))
-    same_verses = sorted(v["ref"] for v in out) == sorted(v["ref"] for v in pool)
-    return (apart, out == again, same_verses)
-
-
-def _speaker(quote):
-    return quote["ref"].split()[0]
+def _who(item):
+    return item["ref"].split()[0]
 
 
 def _apart_all_round(out):
-    """No two neighbours share a speaker -- the last and the first included,
-    since the calendar deals the list out as a circle."""
-    return all(_speaker(x) != _speaker(y) for x, y in zip(out, out[1:] + out[:1]))
+    """No two neighbours share a key -- the last and the first included, since
+    the calendar deals the list out as a circle."""
+    return all(_who(x) != _who(y) for x, y in zip(out, out[1:] + out[:1]))
 
 
-@case("spacing out the quotes keeps speakers apart all the way round", (True, True, True))
+def _spread_shape(sizes: dict[str, int], seeds: int = 50) -> tuple[bool, bool]:
+    """Spread a pool of this shape under many seeds: (kept apart, lost nothing)."""
+    pool = [{"ref": f"{who} {n}"} for who, count in sizes.items() for n in range(count)]
+    results = [builder.spread(pool, seed=seed, key=_who) for seed in range(seeds)]
+    whole = all(sorted(x["ref"] for x in out) == sorted(x["ref"] for x in pool)
+                for out in results)
+    return (all(_apart_all_round(out) for out in results), whole)
+
+
+@case("spreading a pool keeps neighbours apart all the way round", (True, True, True))
 def _():
-    pool = [{"ref": f"{who} {n}"} for who in "abc" for n in range(4)]
-    out = builder.space_out(pool, seed=1, key=_speaker)
-    again = builder.space_out(pool, seed=1, key=_speaker)
-    same_quotes = sorted(q["ref"] for q in out) == sorted(q["ref"] for q in pool)
-    return (_apart_all_round(out), out == again, same_quotes)
+    pool = [{"ref": f"{book} {n}"} for book in "abc" for n in range(4)]
+    out = builder.spread(pool, seed=1, key=_who)
+    again = builder.spread(pool, seed=1, key=_who)
+    same_items = sorted(v["ref"] for v in out) == sorted(v["ref"] for v in pool)
+    return (_apart_all_round(out), out == again, same_items)
 
 
 @case("one speaker far ahead of the rest still never runs two days", (True, True))
@@ -232,12 +227,17 @@ def _():
     # The shape of April 2026: thirteen quotes from one speaker, seven from a
     # few, three from many. Dealt round-robin, the end of the list was the
     # thirteen alone, seven days running, and the start was them again.
-    sizes = {"p": 13, "a": 7, "b": 7, "c": 7} | {f"s{n}": 3 for n in range(30)}
-    pool = [{"ref": f"{who} {n}"} for who, count in sizes.items() for n in range(count)]
-    results = [builder.space_out(pool, seed=seed, key=_speaker) for seed in range(50)]
-    whole = all(sorted(q["ref"] for q in out) == sorted(q["ref"] for q in pool)
-                for out in results)
-    return (all(_apart_all_round(out) for out in results), whole)
+    return _spread_shape({"p": 13, "a": 7, "b": 7, "c": 7} | {f"s{n}": 3 for n in range(30)})
+
+
+@case("the Book of Mormon tier never gives one book two days running", (True, True))
+def _():
+    # The shape of the tier, 500 verses: dealt round-robin, its end was Alma
+    # alone for 28 days, and nothing else in the calendar ran so long.
+    return _spread_shape({"Alma": 153, "2-Nephi": 71, "3-Nephi": 58, "Mosiah": 51,
+                          "Moroni": 40, "1-Nephi": 35, "Helaman": 29, "Jacob": 19,
+                          "Mormon": 17, "Ether": 13, "Enos": 5, "4-Nephi": 5,
+                          "Words-of-Mormon": 2, "Omni": 1, "Jarom": 1})
 
 
 # ---------- which manual, which conference ----------

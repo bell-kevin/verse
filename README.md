@@ -307,9 +307,16 @@ merely scraped through, so the ordinary days draw on **the best 500** instead
 more than a year, so a reader is never shown a repeat inside their first year,
 and it still turns over enough that a second year is not a rerun of the first.
 
-Those 500 are shuffled with a fixed seed and then **dealt out round-robin by
-book**, so consecutive days come from different places rather than marching
-through Alma for a fortnight.
+Those 500 are shuffled with a fixed seed and then **spaced out by book**, so
+consecutive days come from different places rather than marching through Alma
+for a fortnight. Each book's verses are set evenly around the tier at their own
+interval — Alma's 153 come round every third or fourth day, Enos's five every
+hundred — and the tier is a circle, so that holds from its last verse back round
+to its first. They used to be dealt round-robin, which is even only while every
+book still has verses left: Alma holds nearly a third of the tier, so the end of
+each turn was Alma alone — from late March to late June 2027, broken only by
+the fortnightly mastery passage, and for the last 28 days not even by that,
+because the passages that fell there were from Alma too.
 
 **Every fourteenth day is a scripture mastery passage instead.** The Church's
 seminary programme names a hundred passages students are asked to know,
@@ -622,9 +629,11 @@ the epoch rather than from a running count, and the ordinary days are numbered
 with the mastery days taken out, so the curated tier is walked straight through
 rather than skipping an entry every fortnight.
 
-Scripture does not change, so the Book of Mormon calendar is stable for good.
-The conference pool is stable until a new conference replaces it — which is the
-point of it, and the one place a date's quote is expected to move.
+Scripture does not change, so the Book of Mormon calendar is stable for good,
+with one exception made on purpose: spacing the tier out by book, in October
+2026, moved every day's verse once. The conference pool is stable until a new
+conference replaces it — which is the point of it, and the one place a date's
+quote is expected to move.
 
 ## How it keeps itself current
 

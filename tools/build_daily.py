@@ -2517,47 +2517,33 @@ def write_months(days: dict[str, dict]) -> tuple[int, int]:
 
 
 def spread(pool: list[dict], seed: int, key) -> list[dict]:
-    """Shuffle a pool so consecutive days are not from the same place."""
-    shuffled = pool[:]
-    random.Random(seed).shuffle(shuffled)
-    # Push items sharing a key (book, or speaker) apart from each other.
-    buckets: dict[str, list[dict]] = {}
-    for item in shuffled:
-        buckets.setdefault(key(item), []).append(item)
-    order = sorted(buckets.values(), key=len, reverse=True)
-    spread_out: list[dict] = []
-    while any(order):
-        for bucket in order:
-            if bucket:
-                spread_out.append(bucket.pop())
-    return spread_out
-
-
-def space_out(pool: list[dict], seed: int, key) -> list[dict]:
-    """Order the conference pool so the same speaker is never two days running.
+    """Order a pool so consecutive days are not from the same place -- the same
+    book for the Book of Mormon tier, the same speaker for the conference.
 
     The calendar deals this list out as a circle -- day N gets item N modulo
     the length -- so its last item is the day before its first, and "apart"
     has to hold all the way round.
 
-    Each speaker's quotes are spaced evenly around that circle at their own
-    interval, from a starting point of their own: twelve quotes in a pool of a
-    hundred and fifty come round every twelve or thirteen days, three every
-    fifty, and no stretch of the calendar is left to one kind of speaker. `spread` dealt
-    them round-robin instead, which is only even while every speaker still has
-    something left: once the short talks ran out, the end of the list was the
-    long ones alone. The April 2026 pool had thirteen quotes from President
-    Oaks and no more than seven from anyone else, so each turn of the calendar
-    ended on him seven days running -- 14 to 20 September among them -- and the
-    next turn began on him again.
+    Each key's items are spaced evenly around that circle at their own
+    interval, from a starting point of their own: Alma's 153 verses in a tier
+    of 500 come round every third or fourth day, Enos's five every hundred, and
+    a speaker with twelve quotes in a pool of a hundred and sixty every
+    thirteen or fourteen. No stretch of the calendar is left to one book or one
+    kind of speaker.
+
+    It used to deal them round-robin, which is only even while every key still
+    has something left. Once the small ones ran out, the end of the list was
+    the big ones alone: each turn of the tier ended on Alma, from late March to
+    late June 2027, broken only by the fortnightly mastery passage and for its
+    last 28 days not even by that, the passages there being Alma's too. And the
+    April 2026 conference, with thirteen quotes from President Oaks and no more
+    than seven from anyone else, ended each turn on him seven days running and
+    began the next turn on him again.
 
     Even spacing nearly always keeps neighbours apart by itself; where two of a
     kind still meet, the second is swapped with the nearest item that fits in
-    its place without making a meeting of its own. Only a speaker holding half
-    the pool could defeat that, and none comes close.
-
-    `spread` still deals the Book of Mormon tier, where changing how it deals
-    would move every day's verse. It has the same tail there, in Alma.
+    its place without making a meeting of its own. Only a key holding half the
+    pool could defeat that, and Alma, the biggest, holds under a third.
     """
     rng = random.Random(seed)
     shuffled = pool[:]
@@ -2662,7 +2648,7 @@ def main() -> int:
         return 1
 
     tier = build_bom_tier(bom)
-    quotes = space_out(quotes, seed=20260102, key=lambda q: q["speaker"])
+    quotes = spread(quotes, seed=20260102, key=lambda q: q["speaker"])
 
     days: dict[str, dict] = {}
     for offset in range(args.days):
