@@ -307,9 +307,16 @@ merely scraped through, so the ordinary days draw on **the best 500** instead
 more than a year, so a reader is never shown a repeat inside their first year,
 and it still turns over enough that a second year is not a rerun of the first.
 
-Those 500 are shuffled with a fixed seed and then **dealt out round-robin by
-book**, so consecutive days come from different places rather than marching
-through Alma for a fortnight.
+Those 500 are shuffled with a fixed seed and then **spaced out by book**, so
+consecutive days come from different places rather than marching through Alma
+for a fortnight. Each book's verses are set evenly around the tier at their own
+interval — Alma's 153 come round every third or fourth day, Enos's five every
+hundred — and the tier is a circle, so that holds from its last verse back round
+to its first. They used to be dealt round-robin, which is even only while every
+book still has verses left: Alma holds nearly a third of the tier, so the end of
+each turn was Alma alone — from late March to late June 2027, broken only by
+the fortnightly mastery passage, and for the last 28 days not even by that,
+because the passages that fell there were from Alma too.
 
 **Every fourteenth day is a scripture mastery passage instead.** The Church's
 seminary programme names a hundred passages students are asked to know,
@@ -430,9 +437,10 @@ not anything worth quoting — and each paragraph is asked the same two question
 the verses are.
 
 **Can it stand alone at all?** A paragraph is dropped if it is outside 90–420
-characters, if it does not end in a full stop (or a question or exclamation
-mark, with or without a closing quotation mark after it), or if it is one of the
-things that only makes sense next to the paragraph before it:
+characters (600, for a talk that would otherwise be quoted fewer than three
+times; see below), if it does not end in a full stop (or a question or
+exclamation mark, with or without a closing quotation mark after it), or if it
+is one of the things that only makes sense next to the paragraph before it:
 
 - an opener that continues a thought — *But…*, *So…*, *However…*, *That…*,
   *He…*, *They…*, *I was…*, *After…*. This card has refused paragraphs on this
@@ -573,11 +581,21 @@ the ones members return to, so his talk gives up to **12**; a counselor in the
 First Presidency **9**; a member of the Quorum of the Twelve **7**; everyone
 else **3**. Every quota is several deep, so any talk with something to say is
 heard from — no speaker who stood at that pulpit and taught goes unquoted,
-however the scoring happened to fall. What a quota cannot do is find a paragraph
-that is not there. A talk whose teaching all runs longer than a card holds, with
-nothing shorter left but statistics and the stories around them, goes unquoted
-rather than be represented by its weakest paragraph. President Christofferson's
-October 2026 talk, on gambling, is one.
+however the scoring happened to fall.
+
+What a quota cannot do is find a paragraph that is not there, and a speaker who
+teaches in long paragraphs may not have three that a card holds comfortably.
+President Christofferson's October 2026 talk, on gambling, put its teaching in
+paragraphs of 440 to 680 characters, and what it had under 420 was statistics,
+a news report and the stories around them; Elder Soares's talk on the fast,
+twelve of whose fifteen paragraphs run long, was down to one. So **every talk
+is quoted at least three times** where it has them to give. A talk short of
+that is made up from its paragraphs of up to 600 characters, which every rule
+above still judges — the floor below too, less the charge for running long,
+which has been conceded — and the card sets them a step smaller, as it does a
+long mastery passage. President Christofferson is heard from in his own words,
+*Today, I am pleading with all of us to live life on a higher plane*, instead
+of not at all.
 
 A floor of 1.0 applies before any quota does, and it matters more than it looks:
 a session's opening and closing are talks like any other to the filters above,
@@ -588,13 +606,13 @@ once.
 
 The pool is then shuffled and spread by speaker, so the same voice does not turn
 up two days running. Each speaker's quotes are spaced evenly around the
-calendar at their own interval — twelve quotes come round every twelve or
-thirteen days, three every fifty — and the calendar is a circle, so that holds
+calendar at their own interval — twelve quotes come round about every two
+weeks, three every seven or eight — and the calendar is a circle, so that holds
 from its last day back round to its first. They used to be dealt round-robin,
 which is even only while every speaker still has something left: the April 2026
 pool held thirteen quotes from President Oaks and no more than seven from
 anyone else, so each turn of the calendar ended on him seven days running.
-**The October 2026 conference yields 155 quotes from 36 talks by 35 speakers**,
+**The October 2026 conference yields 160 quotes from 37 talks by 36 speakers**,
 so a quote comes round again about every five months. Raise `--conferences` if
 you would rather trade freshness for variety.
 
@@ -611,9 +629,11 @@ the epoch rather than from a running count, and the ordinary days are numbered
 with the mastery days taken out, so the curated tier is walked straight through
 rather than skipping an entry every fortnight.
 
-Scripture does not change, so the Book of Mormon calendar is stable for good.
-The conference pool is stable until a new conference replaces it — which is the
-point of it, and the one place a date's quote is expected to move.
+Scripture does not change, so the Book of Mormon calendar is stable for good,
+with one exception made on purpose: spacing the tier out by book, in October
+2026, moved every day's verse once. The conference pool is stable until a new
+conference replaces it — which is the point of it, and the one place a date's
+quote is expected to move.
 
 ## How it keeps itself current
 
@@ -663,8 +683,15 @@ lag. Between conference weekend and the talks appearing, it simply keeps
 quoting the previous conference; the changeover then happens on its own within
 a few days, with no date to keep in step by hand.
 
-The refetch runs Mondays and Thursdays, which bounds how long after publication
-a new conference takes to show up.
+The refetch runs Mondays and Thursdays, and daily through the fortnight after
+each conference until the new one is in, so a conference is taken in the day
+after its talks go up, whichever day that turns out to be. The talks go up when
+they go up: October 2026's were not there at noon the Monday after conference
+and were all there by Thursday morning, and a schedule that bet on particular
+days would wait most of a week whenever it guessed wrong. Each of those daily
+runs first asks the calendar alone, with no request to anyone, whether a
+conference has closed that it is not quoting yet — so once the new one is in,
+the rest of the fortnight costs nothing but the usual render.
 
 ### The speaker's photo
 
@@ -681,7 +708,7 @@ from a `file://` URL.
 
 The image URLs are IIIF, so the builder asks for the width it actually serves
 (480px, just under twice the 272px the card displays it at) rather than taking
-whatever size the page happened to link. That is currently 36 files and 803 KB —
+whatever size the page happened to link. That is currently 37 files and 823 KB —
 one photo per talk that contributed a quote, fetched once and skipped on later
 builds since a talk's photo never changes. A talk whose every paragraph was
 filtered out can never be shown, so its photo is never downloaded. When a new
@@ -771,7 +798,7 @@ Two cases get no cushion, for opposite reasons:
 - **A verse whose neighbour above would fill the screen on its own** keeps its
   own anchor and takes the clipping, because being cut off at the top beats
   starting below the bottom. This is the escape hatch, and it is meant to be
-  rare: 8 links out of 1,112 across the two-year calendar. It has been the
+  rare: 9 links out of 1,117 across the two-year calendar. It has been the
   other way round. When the limit was a flat 400 characters it cut straight
   through the middle of how long a paragraph actually runs — Alma 57:26 is 402
   — and 60 links were quietly taking the clipping, a fifth of the conference
@@ -905,6 +932,10 @@ Alongside it, scheduled runs of `.github/workflows/deploy.yml` keep it current:
   matter only on the mornings GitHub skips.
 - **Mondays and Thursdays**, at 09:00 UTC — a full refetch, to extend the
   calendar and pick up a newly published conference or manual.
+- **Daily from the 2nd to the 14th of April and October**, at 09:30 UTC — the
+  same refetch, but only while a conference has closed that the calendar is not
+  quoting yet, so its talks are in the day after they go up. Otherwise it is
+  one more render.
 
 Anything either run changes — the calendar under `data/`, `index.html`, and the
 speaker photos — is committed back to the repository, and then only the served
@@ -946,6 +977,7 @@ python tools/build_daily.py --conferences 4          # quote from the last four 
 python tools/build_daily.py --timezone Europe/London # whose "today" the page is built for
 python tools/build_daily.py --render-only --date 2026-12-25   # render a specific day
 python tools/build_daily.py --cfm-years 3            # build a third year of manuals
+python tools/build_daily.py --conference-due         # exit 0 if a closed conference is not in yet
 python tools/build_daily.py \
     --manual come-follow-me-for-home-and-church-new-testament-2027 \
     --manual-year 2027                               # pin one manual, skipping the cycle
@@ -1076,11 +1108,12 @@ python tools/test_calendar.py            # no network, no cache needed
 The plumbing around the rules above, held to cases in code rather than to
 verses: what a week's title says about its dates and its chapters, which day of
 the Book of Mormon calendar lands on which verse, which manual and which
-conference a date reaches for, which of a conference's links are talks, how its
-quotes are spaced, how a passage is cited and linked. None of it is hard, and
-all of it is the kind of thing that is right until somebody touches it — the
-ordinary-day index in `bom_for` is one subtraction away from skipping a verse
-every fortnight, and nothing else would notice for a year.
+conference a date reaches for, when a new conference is due, which of a
+conference's links are talks, how many quotes a talk gives and how they are
+spaced, how a passage is cited and linked. None of it is hard, and all of it is
+the kind of thing that is right until somebody touches it — the ordinary-day
+index in `bom_for` is one subtraction away from skipping a verse every
+fortnight, and nothing else would notice for a year.
 
 ## Licensing, and what the licence does not cover
 

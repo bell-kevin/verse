@@ -44,6 +44,17 @@ on:
     # for the next Come, Follow Me manual, so the January curriculum changeover
     # needs no edit either -- see resolve_cfm_manuals in tools/build_daily.py.
     - cron: "0 9 * * 1,4"
+    # And daily through the fortnight after each conference, so a new one is
+    # taken in the day after its talks go up rather than at the next Monday or
+    # Thursday. Conference closes on the first Sunday of April and of October,
+    # and its text goes up when it goes up: October 2026's was not there at
+    # noon the Monday after and was all there by Thursday morning. Moving the
+    # twice-weekly refetch to the middle of the week instead would only bet on
+    # which day that is, and leave a six-day gap the rest of the year. These
+    # runs fetch only while a conference has closed that the calendar is not
+    # quoting yet -- see "Decide whether to refetch" below -- and are an
+    # ordinary render on every other day of the window.
+    - cron: "30 9 2-14 4,10 *"
   workflow_dispatch:
     inputs:
       refetch:
@@ -105,6 +116,30 @@ jobs:
       - name: Check the calendar arithmetic
         run: python tools/test_calendar.py
 
+      # Whether this run fetches anything, decided once for every step below.
+      # The twice-weekly refetch and a dispatch that asks for one always do.
+      # The conference window does only while a conference has closed that the
+      # calendar is not quoting yet, which the builder answers from the
+      # calendar alone, with no request to anyone -- so once the new conference
+      # is in, the rest of the window costs a render a day and nothing more.
+      # Every other run re-renders today's page from the calendar already in
+      # the repository.
+      - name: Decide whether to refetch
+        id: plan
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+          ASKED: ${{ inputs.refetch }}
+        run: |
+          if [ "$SCHEDULE" = "0 9 * * 1,4" ] || [ "$ASKED" = "true" ]; then
+            refetch=true
+          elif [ "$SCHEDULE" = "30 9 2-14 4,10 *" ] && python tools/build_daily.py --conference-due; then
+            refetch=true
+          else
+            refetch=false
+          fi
+          echo "refetch=$refetch" >> "$GITHUB_OUTPUT"
+          echo "Refetch: $refetch"
+
       # A full refetch is ~1,100 requests, and about 930 of them are chapters
       # of scripture, which do not change. So the response cache is carried
       # over from the last refetch rather than started cold, and only the
@@ -114,7 +149,7 @@ jobs:
       # need refetching. The key never matches exactly, on purpose: that is
       # what makes the action save a fresh copy at the end of every run.
       - name: Restore the scripture cache
-        if: github.event.schedule == '0 9 * * 1,4' || inputs.refetch
+        if: steps.plan.outputs.refetch == 'true'
         uses: actions/cache@v6
         with:
           path: .cache
@@ -122,21 +157,20 @@ jobs:
           restore-keys: study-api-v1-
 
       - name: Forget the responses that can go stale
-        if: github.event.schedule == '0 9 * * 1,4' || inputs.refetch
+        if: steps.plan.outputs.refetch == 'true'
         run: |
           mkdir -p .cache
           find .cache -name '*.json.gz' ! -name 'scriptures_*' -delete
           echo "$(find .cache -name '*.json.gz' | wc -l) chapters kept"
 
-      # The refetch runs only on the twice-weekly cron or when asked for.
-      # Every other run just re-renders today's page from the calendar already
-      # in the repository.
+      # The refetch runs only when the step above says so. Every other run just
+      # re-renders today's page from the calendar already in the repository.
       - name: Refetch readings calendar
-        if: github.event.schedule == '0 9 * * 1,4' || inputs.refetch
+        if: steps.plan.outputs.refetch == 'true'
         run: python tools/build_daily.py --days 730
 
       - name: Render today's page
-        if: github.event.schedule != '0 9 * * 1,4' && !inputs.refetch
+        if: steps.plan.outputs.refetch != 'true'
         run: python tools/build_daily.py --render-only
 
       # The run above is the only one that writes links, so the calendar it
@@ -144,7 +178,7 @@ jobs:
       # build could only ever audit the calendar of the run before it, which is
       # how a fortnight of clipped links went out green.
       - name: Check where the rebuilt links land
-        if: github.event.schedule == '0 9 * * 1,4' || inputs.refetch
+        if: steps.plan.outputs.refetch == 'true'
         run: python tools/test_links.py
 
       # Bookkeeping only: the deploy below uses the working tree either way, so

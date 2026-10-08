@@ -5,8 +5,9 @@ The other tests hold the rules that judge a verse or a paragraph to cases a
 reader ruled on. This one holds the plumbing around those rules to cases in
 code: what a week's title says about its dates and its chapters, which day of
 the Book of Mormon calendar lands on which verse, which manual and which
-conference a date reaches for, which of a conference's links are talks, how
-its quotes are spaced, how a passage is cited and linked.
+conference a date reaches for, when a new conference is due, which of a
+conference's links are talks, how many quotes a talk gives and how they are
+spaced, how a passage is cited and linked.
 
 None of it is hard, and all of it is the kind of thing that is right until
 somebody touches it. The day index in `bom_for` is the plainest example: the
@@ -194,37 +195,32 @@ def _():
     return [builder.bom_for(i, TIER, [])["reference"] for i in (6, 7, 8)]
 
 
-@case("spreading a pool keeps neighbours apart and loses nothing", (True, True, True))
-def _():
-    pool = [{"ref": f"{book} {n}"} for book in "abc" for n in range(4)]
-
-    def key(verse):
-        return verse["ref"].split()[0]
-
-    out = builder.spread(pool, seed=1, key=key)
-    again = builder.spread(pool, seed=1, key=key)
-    apart = all(key(x) != key(y) for x, y in zip(out, out[1:]))
-    same_verses = sorted(v["ref"] for v in out) == sorted(v["ref"] for v in pool)
-    return (apart, out == again, same_verses)
-
-
-def _speaker(quote):
-    return quote["ref"].split()[0]
+def _who(item):
+    return item["ref"].split()[0]
 
 
 def _apart_all_round(out):
-    """No two neighbours share a speaker -- the last and the first included,
-    since the calendar deals the list out as a circle."""
-    return all(_speaker(x) != _speaker(y) for x, y in zip(out, out[1:] + out[:1]))
+    """No two neighbours share a key -- the last and the first included, since
+    the calendar deals the list out as a circle."""
+    return all(_who(x) != _who(y) for x, y in zip(out, out[1:] + out[:1]))
 
 
-@case("spacing out the quotes keeps speakers apart all the way round", (True, True, True))
+def _spread_shape(sizes: dict[str, int], seeds: int = 50) -> tuple[bool, bool]:
+    """Spread a pool of this shape under many seeds: (kept apart, lost nothing)."""
+    pool = [{"ref": f"{who} {n}"} for who, count in sizes.items() for n in range(count)]
+    results = [builder.spread(pool, seed=seed, key=_who) for seed in range(seeds)]
+    whole = all(sorted(x["ref"] for x in out) == sorted(x["ref"] for x in pool)
+                for out in results)
+    return (all(_apart_all_round(out) for out in results), whole)
+
+
+@case("spreading a pool keeps neighbours apart all the way round", (True, True, True))
 def _():
-    pool = [{"ref": f"{who} {n}"} for who in "abc" for n in range(4)]
-    out = builder.space_out(pool, seed=1, key=_speaker)
-    again = builder.space_out(pool, seed=1, key=_speaker)
-    same_quotes = sorted(q["ref"] for q in out) == sorted(q["ref"] for q in pool)
-    return (_apart_all_round(out), out == again, same_quotes)
+    pool = [{"ref": f"{book} {n}"} for book in "abc" for n in range(4)]
+    out = builder.spread(pool, seed=1, key=_who)
+    again = builder.spread(pool, seed=1, key=_who)
+    same_items = sorted(v["ref"] for v in out) == sorted(v["ref"] for v in pool)
+    return (_apart_all_round(out), out == again, same_items)
 
 
 @case("one speaker far ahead of the rest still never runs two days", (True, True))
@@ -232,12 +228,17 @@ def _():
     # The shape of April 2026: thirteen quotes from one speaker, seven from a
     # few, three from many. Dealt round-robin, the end of the list was the
     # thirteen alone, seven days running, and the start was them again.
-    sizes = {"p": 13, "a": 7, "b": 7, "c": 7} | {f"s{n}": 3 for n in range(30)}
-    pool = [{"ref": f"{who} {n}"} for who, count in sizes.items() for n in range(count)]
-    results = [builder.space_out(pool, seed=seed, key=_speaker) for seed in range(50)]
-    whole = all(sorted(q["ref"] for q in out) == sorted(q["ref"] for q in pool)
-                for out in results)
-    return (all(_apart_all_round(out) for out in results), whole)
+    return _spread_shape({"p": 13, "a": 7, "b": 7, "c": 7} | {f"s{n}": 3 for n in range(30)})
+
+
+@case("the Book of Mormon tier never gives one book two days running", (True, True))
+def _():
+    # The shape of the tier, 500 verses: dealt round-robin, its end was Alma
+    # alone for 28 days, and nothing else in the calendar ran so long.
+    return _spread_shape({"Alma": 153, "2-Nephi": 71, "3-Nephi": 58, "Mosiah": 51,
+                          "Moroni": 40, "1-Nephi": 35, "Helaman": 29, "Jacob": 19,
+                          "Mormon": 17, "Ether": 13, "Enos": 5, "4-Nephi": 5,
+                          "Words-of-Mormon": 2, "Omni": 1, "Jarom": 1})
 
 
 # ---------- which manual, which conference ----------
@@ -265,6 +266,25 @@ def _():
 @case("the month conference is held already counts", [(2026, 10), (2026, 4)])
 def _():
     return list(builder.conference_candidates(dt.date(2026, 10, 1), depth=2))
+
+
+@case("a refetch is due from the Monday after conference until it is in",
+      (False, True, True, False))
+def _():
+    # October 2026 closed on Sunday the 4th.
+    return (builder.conference_due(dt.date(2026, 10, 4), "April 2026"),
+            builder.conference_due(dt.date(2026, 10, 5), "April 2026"),
+            builder.conference_due(dt.date(2026, 10, 14), "April 2026"),
+            builder.conference_due(dt.date(2026, 10, 8), "October 2026"))
+
+
+@case("conference can close on the first of the month, and only in April and October",
+      (False, True, False))
+def _():
+    # October 2023 closed on Sunday the 1st.
+    return (builder.conference_due(dt.date(2023, 10, 1), "April 2023"),
+            builder.conference_due(dt.date(2023, 10, 2), "April 2023"),
+            builder.conference_due(dt.date(2026, 11, 2), "April 2026"))
 
 
 @case("a conference's talks are counted without its session pages",
@@ -298,6 +318,40 @@ def _():
 @case("a long reading is set a step smaller", ("scripture", "scripture scripture--long"))
 def _():
     return (builder.scripture_class("x" * 420), builder.scripture_class("x" * 421))
+
+
+@case("a long quote is set a step smaller too", ("quote", "quote quote--long"))
+def _():
+    return (builder.quote_class("x" * 420), builder.quote_class("x" * 421))
+
+
+# ---------- how many quotes a talk gives ----------
+
+def _quote(name, score, closing=False):
+    return {"text": name, "score": score, "closing": closing}
+
+
+def _names(quotes):
+    return [q["text"] for q in quotes]
+
+
+@case("a talk takes its best, up to its quota, closing last", ["b", "a", "amen"])
+def _():
+    candidates = [_quote("amen", 9, closing=True), _quote("a", 2), _quote("b", 5)]
+    return _names(builder.take_quotes(candidates, [], quota=7))
+
+
+@case("a talk short of the minimum is made up from its long paragraphs",
+      ["short", "long best", "long next"])
+def _():
+    at_length = [_quote("long next", 3), _quote("long best", 6), _quote("long last", 1)]
+    return _names(builder.take_quotes([_quote("short", 1)], at_length, quota=9))
+
+
+@case("a talk with enough never reaches for a long paragraph", ["a", "b", "c"])
+def _():
+    candidates = [_quote("a", 5), _quote("b", 4), _quote("c", 3)]
+    return _names(builder.take_quotes(candidates, [_quote("long", 99)], quota=3))
 
 
 @case("a share block is the reading, the credit, the link", "text\n\nAlma 32:21\n\nhttps://x")
