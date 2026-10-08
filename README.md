@@ -606,13 +606,13 @@ once.
 
 The pool is then shuffled and spread by speaker, so the same voice does not turn
 up two days running. Each speaker's quotes are spaced evenly around the
-calendar at their own interval — twelve quotes come round every twelve or
-thirteen days, three every fifty — and the calendar is a circle, so that holds
+calendar at their own interval — twelve quotes come round about every two
+weeks, three every seven or eight — and the calendar is a circle, so that holds
 from its last day back round to its first. They used to be dealt round-robin,
 which is even only while every speaker still has something left: the April 2026
 pool held thirteen quotes from President Oaks and no more than seven from
 anyone else, so each turn of the calendar ended on him seven days running.
-**The October 2026 conference yields 155 quotes from 36 talks by 35 speakers**,
+**The October 2026 conference yields 160 quotes from 37 talks by 36 speakers**,
 so a quote comes round again about every five months. Raise `--conferences` if
 you would rather trade freshness for variety.
 
@@ -708,7 +708,7 @@ from a `file://` URL.
 
 The image URLs are IIIF, so the builder asks for the width it actually serves
 (480px, just under twice the 272px the card displays it at) rather than taking
-whatever size the page happened to link. That is currently 36 files and 803 KB —
+whatever size the page happened to link. That is currently 37 files and 823 KB —
 one photo per talk that contributed a quote, fetched once and skipped on later
 builds since a talk's photo never changes. A talk whose every paragraph was
 filtered out can never be shown, so its photo is never downloaded. When a new
@@ -798,7 +798,7 @@ Two cases get no cushion, for opposite reasons:
 - **A verse whose neighbour above would fill the screen on its own** keeps its
   own anchor and takes the clipping, because being cut off at the top beats
   starting below the bottom. This is the escape hatch, and it is meant to be
-  rare: 8 links out of 1,112 across the two-year calendar. It has been the
+  rare: 9 links out of 1,117 across the two-year calendar. It has been the
   other way round. When the limit was a flat 400 characters it cut straight
   through the middle of how long a paragraph actually runs — Alma 57:26 is 402
   — and 60 links were quietly taking the clipping, a fifth of the conference
