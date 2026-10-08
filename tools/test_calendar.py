@@ -5,8 +5,9 @@ The other tests hold the rules that judge a verse or a paragraph to cases a
 reader ruled on. This one holds the plumbing around those rules to cases in
 code: what a week's title says about its dates and its chapters, which day of
 the Book of Mormon calendar lands on which verse, which manual and which
-conference a date reaches for, which of a conference's links are talks, how
-its quotes are spaced, how a passage is cited and linked.
+conference a date reaches for, when a new conference is due, which of a
+conference's links are talks, how many quotes a talk gives and how they are
+spaced, how a passage is cited and linked.
 
 None of it is hard, and all of it is the kind of thing that is right until
 somebody touches it. The day index in `bom_for` is the plainest example: the
@@ -265,6 +266,25 @@ def _():
 @case("the month conference is held already counts", [(2026, 10), (2026, 4)])
 def _():
     return list(builder.conference_candidates(dt.date(2026, 10, 1), depth=2))
+
+
+@case("a refetch is due from the Monday after conference until it is in",
+      (False, True, True, False))
+def _():
+    # October 2026 closed on Sunday the 4th.
+    return (builder.conference_due(dt.date(2026, 10, 4), "April 2026"),
+            builder.conference_due(dt.date(2026, 10, 5), "April 2026"),
+            builder.conference_due(dt.date(2026, 10, 14), "April 2026"),
+            builder.conference_due(dt.date(2026, 10, 8), "October 2026"))
+
+
+@case("conference can close on the first of the month, and only in April and October",
+      (False, True, False))
+def _():
+    # October 2023 closed on Sunday the 1st.
+    return (builder.conference_due(dt.date(2023, 10, 1), "April 2023"),
+            builder.conference_due(dt.date(2023, 10, 2), "April 2023"),
+            builder.conference_due(dt.date(2026, 11, 2), "April 2026"))
 
 
 @case("a conference's talks are counted without its session pages",

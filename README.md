@@ -683,8 +683,15 @@ lag. Between conference weekend and the talks appearing, it simply keeps
 quoting the previous conference; the changeover then happens on its own within
 a few days, with no date to keep in step by hand.
 
-The refetch runs Mondays and Thursdays, which bounds how long after publication
-a new conference takes to show up.
+The refetch runs Mondays and Thursdays, and daily through the fortnight after
+each conference until the new one is in, so a conference is taken in the day
+after its talks go up, whichever day that turns out to be. The talks go up when
+they go up: October 2026's were not there at noon the Monday after conference
+and were all there by Thursday morning, and a schedule that bet on particular
+days would wait most of a week whenever it guessed wrong. Each of those daily
+runs first asks the calendar alone, with no request to anyone, whether a
+conference has closed that it is not quoting yet — so once the new one is in,
+the rest of the fortnight costs nothing but the usual render.
 
 ### The speaker's photo
 
@@ -925,6 +932,10 @@ Alongside it, scheduled runs of `.github/workflows/deploy.yml` keep it current:
   matter only on the mornings GitHub skips.
 - **Mondays and Thursdays**, at 09:00 UTC — a full refetch, to extend the
   calendar and pick up a newly published conference or manual.
+- **Daily from the 2nd to the 14th of April and October**, at 09:30 UTC — the
+  same refetch, but only while a conference has closed that the calendar is not
+  quoting yet, so its talks are in the day after they go up. Otherwise it is
+  one more render.
 
 Anything either run changes — the calendar under `data/`, `index.html`, and the
 speaker photos — is committed back to the repository, and then only the served
@@ -966,6 +977,7 @@ python tools/build_daily.py --conferences 4          # quote from the last four 
 python tools/build_daily.py --timezone Europe/London # whose "today" the page is built for
 python tools/build_daily.py --render-only --date 2026-12-25   # render a specific day
 python tools/build_daily.py --cfm-years 3            # build a third year of manuals
+python tools/build_daily.py --conference-due         # exit 0 if a closed conference is not in yet
 python tools/build_daily.py \
     --manual come-follow-me-for-home-and-church-new-testament-2027 \
     --manual-year 2027                               # pin one manual, skipping the cycle
@@ -1096,11 +1108,12 @@ python tools/test_calendar.py            # no network, no cache needed
 The plumbing around the rules above, held to cases in code rather than to
 verses: what a week's title says about its dates and its chapters, which day of
 the Book of Mormon calendar lands on which verse, which manual and which
-conference a date reaches for, which of a conference's links are talks, how its
-quotes are spaced, how a passage is cited and linked. None of it is hard, and
-all of it is the kind of thing that is right until somebody touches it — the
-ordinary-day index in `bom_for` is one subtraction away from skipping a verse
-every fortnight, and nothing else would notice for a year.
+conference a date reaches for, when a new conference is due, which of a
+conference's links are talks, how many quotes a talk gives and how they are
+spaced, how a passage is cited and linked. None of it is hard, and all of it is
+the kind of thing that is right until somebody touches it — the ordinary-day
+index in `bom_for` is one subtraction away from skipping a verse every
+fortnight, and nothing else would notice for a year.
 
 ## Licensing, and what the licence does not cover
 

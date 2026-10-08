@@ -1592,6 +1592,25 @@ def conference_candidates(today: dt.date, depth: int = 8):
         year, month = (year, 4) if month == 10 else (year - 1, 10)
 
 
+def conference_due(today: dt.date, quoting: str) -> bool:
+    """Whether a conference has closed that the calendar is not quoting yet.
+
+    `quoting` is the session the calendar's quotes come from, "October 2026".
+    Conference closes on the first Sunday of April and of October -- which can
+    be the first of the month, as on 1 October 2023 -- and its talks go up over
+    the days after it. Between that Sunday and the calendar taking the new
+    conference in, a refetch is due; see the conference window in
+    .github/workflows/deploy.yml.
+    """
+    if today.month not in (4, 10):
+        return False
+    first = today.replace(day=1)
+    sunday = first + dt.timedelta(days=(6 - first.weekday()) % 7)
+    if today <= sunday:
+        return False
+    return quoting != f"{'April' if today.month == 4 else 'October'} {today.year}"
+
+
 def talk_uris_in(body: str, year: int, month: int) -> list[str]:
     """The talks a conference's index page links to, as study URIs.
 
@@ -2601,9 +2620,28 @@ def main() -> int:
                          "without fetching anything")
     ap.add_argument("--date", default=None,
                     help="render for this date instead of today (YYYY-MM-DD)")
+    ap.add_argument("--conference-due", action="store_true",
+                    help="fetch nothing; exit 0 if a conference has closed that "
+                         "the calendar is not quoting yet, 1 if not")
     args = ap.parse_args()
 
     as_of = dt.date.fromisoformat(args.date) if args.date else None
+
+    # Asked by the workflow's conference window before it refetches anything,
+    # so that once the new conference is in, the window's remaining days cost
+    # nothing but a render. See `conference_due`.
+    if args.conference_due:
+        date = as_of or today_in(args.timezone)
+        if not OUT.exists():
+            print(f"No {OUT.relative_to(ROOT)} yet; a refetch is due.")
+            return 0
+        with open(OUT, encoding="utf-8") as fh:
+            entry = json.load(fh)["days"].get(date.isoformat()) or {}
+        quoting = (entry.get("quote") or {}).get("session", "")
+        due = conference_due(date, quoting)
+        print(f"{date}: the calendar quotes {quoting or 'nothing'}; "
+              + ("a refetch is due." if due else "nothing to fetch."))
+        return 0 if due else 1
 
     # The daily job only needs to move the page on to the next day, which the
     # prebuilt calendar already answers -- no need to refetch anything.
