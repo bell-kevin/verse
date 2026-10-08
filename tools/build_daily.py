@@ -1561,9 +1561,11 @@ def build_cfm_weeks(manual: str, year: int) -> list[dict]:
 # source 3 -- General Conference quotes
 # --------------------------------------------------------------------------
 
-# A full conference is about forty talks -- 41 in April 2026, 40 the October
-# before it. Requiring half of them stops a half-posted conference from being
-# chosen while it is still going up.
+# A full conference is thirty-five to forty talks -- 35 in October 2025, 37 in
+# April 2026, 38 in October 2026, counting the sustaining and the audit among
+# them -- and requiring twenty stops a half-posted conference from being chosen
+# while it is still going up. The index's session pages are not counted; see
+# `talk_uris_in`.
 CONFERENCE_MIN_TALKS = 20
 
 # Speaker photos are saved into the repository rather than hot-linked, so a
@@ -1590,15 +1592,31 @@ def conference_candidates(today: dt.date, depth: int = 8):
         year, month = (year, 4) if month == 10 else (year - 1, 10)
 
 
+def talk_uris_in(body: str, year: int, month: int) -> list[str]:
+    """The talks a conference's index page links to, as study URIs.
+
+    The index links each session's own page as well as the talks in it --
+    /general-conference/2026/10/saturday-morning-session and the rest -- and a
+    session is not a talk. Counted as one, it made October 2026's 38 talks look
+    like 42, and on the Monday after that conference, with not one talk posted
+    yet, it reported four; it also let a conference with only sixteen talks up
+    pass for one with the twenty CONFERENCE_MIN_TALKS asks for. Sessions are
+    told apart by the slug alone, so a change to the page's markup cannot make
+    every talk look like one.
+    """
+    return sorted({
+        "/" + uri for uri in re.findall(
+            rf"/study/(general-conference/{year}/{month:02d}/[a-z0-9-]+)\?lang=eng",
+            body)
+        if not uri.endswith("-session")
+    })
+
+
 def talk_uris_for(year: int, month: int) -> list[str]:
     index = fetch(f"/general-conference/{year}/{month:02d}")
     if not index:
         return []
-    return sorted({
-        "/" + u for u in re.findall(
-            rf"/study/(general-conference/{year}/{month:02d}/[a-z0-9-]+)\?lang=eng",
-            index["content"]["body"])
-    })
+    return talk_uris_in(index["content"]["body"], year, month)
 
 
 def resolve_conferences(count: int, today: dt.date | None = None
@@ -1831,10 +1849,33 @@ ENUMERATION = re.compile(
     r"^(first|second|third|fourth|fifth|sixth|seventh|next|finally|lastly|"
     r"number \w+)\b\s*[,:]", re.I)
 
-# The furniture of a session rather than the preaching in it.
+# The same list picked up by naming its item rather than counting it off --
+# "The third principle is to be a light", "Now, the fourth principle is to hold
+# to truth", "My second observation is that ...", "The first is to stand in
+# holy places". Read cold, the card promises a list it never shows. What marks
+# one is the ordinal and then, within a few words, what that item *is*; or an
+# "of" reaching back into the list, as in "The second of the great assistances
+# provided by the Lord". An "of" anywhere else names something whole -- "the
+# first principle of the gospel" -- and is left alone.
+#
+# The ordinal is lower case, and the case is what makes this safe: capitalised,
+# it is part of a name -- "The First Presidency", "The Second Comforter" -- and
+# the paragraph is about that. "Last" is not among them, because scripture uses
+# it as no list does: "the last days", "the last shall be first".
+LIST_ITEM = re.compile(
+    r"^(?:(?:Now|And|So),?\s+(?:the|a|my|our)|The|A|My|Our)\s+"
+    r"(?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|"
+    r"next|final)"
+    r"(?:(?:\s+(?!of\b)[\w’'-]+){0,4}?\s+(?:then\s+)?(?:is|are)\b"
+    r"|\s+of\s+(?:the|these|those|my|our)\b)")
+
+# The furniture of a session rather than the preaching in it. A session is
+# only ever "this" one from the pulpit -- "As we begin this opening session",
+# "Following this session of general conference, the first episode of a video
+# series will premiere" -- and the card is read on some other day entirely.
 HOUSEKEEPING = re.compile(
     r"\b(the choir|we have just (?:heard|sung)|welcome to this|welcome you to|"
-    r"we are grateful to (?:be|have)|this morning'?s session|"
+    r"we are grateful to (?:be|have)|this (?:[\w’']+\s+){0,2}session|"
     r"the closing (?:prayer|hymn)|will now be|please be seated)\b", re.I)
 
 
@@ -1979,6 +2020,50 @@ def unnamed_occasion(text: str) -> bool:
     return False
 
 
+# An opening that sets a scene in time is a story's, and the story is not on
+# the card. "Thirty-nine years ago, President Dallin H. Oaks taught me about the
+# character of Jesus Christ in a way I will never forget" is the first line of
+# one, and what he taught is in the paragraphs after it; "The next morning, I
+# called my mission president" and "In the late 1980s, Mr. Martin developed
+# severe heart failure" are scenes from the middle. "After ..." and "Later"
+# have always been refused for this, and these are the shapes the rest of it
+# takes: a time ago, a decade, the next or the following day, so many days
+# later, soon after, one evening.
+#
+# "One day" alone can face forward -- "One day we will stand before Him" -- so
+# a "will" or a "shall" close behind it keeps the paragraph, as it does for
+# "that day" in `unnamed_occasion`. A year on its own is not refused: "In
+# October 2024, President Dallin H. Oaks gave the following counsel" dates a
+# teaching rather than starting a story.
+STORY_OPENER = re.compile(
+    r"^(?:[^.,;:!?“”]{0,40}\bago\b"
+    r"|In\s+the\s+(?:early\s+|mid-?|late\s+)?\d{4}s\b"
+    r"|(?:The|That)\s+(?:next|following)\s+(?:morning|day|night|evening|"
+    r"afternoon|week|weekend|month|year|Sabbath|Sunday|time)\b"
+    r"|[^.,;:!?“”]{0,25}\b(?:minutes|hours|days|weeks|months|years)\s+later\b"
+    r"|(?:Soon|Shortly|Not\s+long)\s+(?:after|afterward|thereafter)\b"
+    r"|One\s+(?:day|morning|evening|night|afternoon|Sabbath|Sunday|Saturday)\b"
+    r"(?![^.!?]{0,40}\b(?:will|shall)\b))")
+
+# Background: a paragraph that sets its teaching in somebody else's day and
+# never brings it back to the reader's. "The Apostle Paul noted in his day that
+# someone with a firm belief in Christ could eat food sacrificed to idols ... it
+# would just be a meal. But he cautioned the disciples to abstain anyway" says
+# what held then and stops; why he cautioned them, and what that asks of anyone
+# now, are the paragraphs after it. It is the em-dash verse's fault in a talk's
+# form -- set up and never paid off. A paragraph that does come back, to "us"
+# or "you" or "today", has paid it off itself and is kept. Over the whole
+# conference cache this refuses that one paragraph and nothing else.
+THEIR_DAY = re.compile(r"\bin\s+(?:his|her|their)\s+(?:own\s+)?day\b", re.I)
+READER_NOW = re.compile(r"\b(?:we|us|our|you|your|today|now)\b", re.I)
+
+# A reply told in sequence -- "and then said", "then responded". See
+# `is_quotable_paragraph`.
+NARRATED_REPLY = re.compile(
+    r"\bthen\s+(?:said|asked|replied|responded|answered|added|whispered|"
+    r"exclaimed)\b", re.I)
+
+
 def is_quotable_paragraph(text: str) -> bool:
     """Whether a paragraph can stand alone at all.
 
@@ -1991,7 +2076,14 @@ def is_quotable_paragraph(text: str) -> bool:
     """
     if not 90 <= len(text) <= 420:
         return False
-    if not text.endswith((".", "!", "?", '."', '!"', '?"')):
+    # A whole sentence, closing a quotation or not. The Church typesets its
+    # quotation marks curly, so the curly ones are what a paragraph actually
+    # ends on; asking only for the straight ones refused every paragraph that
+    # closed on someone's words -- a fifth to a quarter of every conference --
+    # whatever it said, and cost the speakers who build to a scripture all but
+    # their shortest lines. Elder Soares's October 2026 talk lost every
+    # paragraph it had.
+    if not text.endswith((".", "!", "?", '."', '!"', '?"', ".”", "!”", "?”")):
         return False
     if HOUSEKEEPING.search(text):
         return False
@@ -2003,7 +2095,8 @@ def is_quotable_paragraph(text: str) -> bool:
             return False
     # A paragraph about the talk it sits in, or one carrying on a list begun
     # several paragraphs earlier.
-    if SELF_REFERENTIAL.search(text) or ENUMERATION.match(text):
+    if (SELF_REFERENTIAL.search(text) or ENUMERATION.match(text)
+            or LIST_ITEM.match(text)):
         return False
     # Skip paragraphs that only make sense next to the one before them, and
     # scene-setting narration that is not a teaching. The possessives and
@@ -2012,26 +2105,54 @@ def is_quotable_paragraph(text: str) -> bool:
     # they cost this conference's pool nothing, having found no paragraph the
     # rest of the test was not already refusing. They are the standard the two
     # scripture cards are held to as well; see DANGLING_OPENER.
+    # The same goes for an object behind a preposition, "To him, and to all who
+    # feel that same ache", and for an "it" that nothing in its sentence fills --
+    # the question `unfilled_it` already asks of the scripture cards, and one
+    # it answers as well here: "It is exactly how the Lord revealed it to the
+    # Prophet Joseph Smith" never says what "it" is.
     if re.match(r"^(But|So|Then|Yet|However|That|This|These|Those|It was|"
                 r"He |She |They |His|Her|Their|Its|Him|Them|Such|"
+                r"(?:To|For|With|From|Like) (?:him|her|them)|"
                 r"We were|I was|After |Later|Then,)\b", text):
+        return False
+    if unfilled_it(text):
         return False
     # "Tragically, the bullet ..." -- an adverb opener almost always continues
     # a story told in the paragraph before.
     if re.match(r"^[A-Z][a-z]+ly,", text):
         return False
+    # "Years ago ...", "The next morning ..." -- a scene from a story. See
+    # STORY_OPENER.
+    if STORY_OPENER.match(text):
+        return False
     # A demonstrative pointing at an occasion the paragraph never names --
     # "remember that day in your life". See `unnamed_occasion`.
     if unnamed_occasion(text):
         return False
+    # Background from somebody else's day that never reaches the reader's. See
+    # THEIR_DAY.
+    if THEIR_DAY.search(text) and not READER_NOW.search(text):
+        return False
     # Storytelling rather than counsel. The verbs are named rather than matched
     # as any past tense, because "-ed" alone throws out the counsel that is
-    # phrased in it -- "I have learned", "He suffered", "I promised".
+    # phrased in it -- "I have learned", "He suffered", "I promised". Each one
+    # is here because a story got through without it, and none of them is here
+    # without a sweep of the cache finding it only in stories: "he reminded me
+    # of the months of preparation" is Elder Dunn's marathon, while "called",
+    # "read" and "taught" each turned out to introduce scripture as often as
+    # they told a story, and are left out.
     if re.search(r"\b(I|we|he|she|they)\s+(was|were|had|sought|went|came|"
                  r"told|said|saw|felt|knew|gave|took|found|began|met|left|"
                  r"heard|spoke|wrote|sat|stood|witnessed|watched|looked|"
-                 r"visited|attended|arrived|returned|recalled|noticed)\b",
+                 r"visited|attended|arrived|returned|recalled|noticed|"
+                 r"reminded)\b",
                  text[:120], re.I):
+        return False
+    # ... and anywhere in it, a reply told in sequence. "President Caballero
+    # read to me the account of the widow's mite and then said ..." is a scene,
+    # and so is every "then said" or "then responded" in the cache: a
+    # conversation retold, which is the story and not the lesson drawn from it.
+    if NARRATED_REPLY.search(text):
         return False
     # Academic asides and dangling half-quotations.
     if "(see " in text or "(compare" in text:
@@ -2359,6 +2480,66 @@ def spread(pool: list[dict], seed: int, key) -> list[dict]:
     return spread_out
 
 
+def space_out(pool: list[dict], seed: int, key) -> list[dict]:
+    """Order the conference pool so the same speaker is never two days running.
+
+    The calendar deals this list out as a circle -- day N gets item N modulo
+    the length -- so its last item is the day before its first, and "apart"
+    has to hold all the way round.
+
+    Each speaker's quotes are spaced evenly around that circle at their own
+    interval, from a starting point of their own: twelve quotes in a pool of a
+    hundred and fifty come round every twelve or thirteen days, three every
+    fifty, and no stretch of the calendar is left to one kind of speaker. `spread` dealt
+    them round-robin instead, which is only even while every speaker still has
+    something left: once the short talks ran out, the end of the list was the
+    long ones alone. The April 2026 pool had thirteen quotes from President
+    Oaks and no more than seven from anyone else, so each turn of the calendar
+    ended on him seven days running -- 14 to 20 September among them -- and the
+    next turn began on him again.
+
+    Even spacing nearly always keeps neighbours apart by itself; where two of a
+    kind still meet, the second is swapped with the nearest item that fits in
+    its place without making a meeting of its own. Only a speaker holding half
+    the pool could defeat that, and none comes close.
+
+    `spread` still deals the Book of Mormon tier, where changing how it deals
+    would move every day's verse. It has the same tail there, in Alma.
+    """
+    rng = random.Random(seed)
+    shuffled = pool[:]
+    rng.shuffle(shuffled)
+    buckets: dict[str, list[dict]] = {}
+    for item in shuffled:
+        buckets.setdefault(key(item), []).append(item)
+    placed: list[tuple[float, dict]] = []
+    for bucket in buckets.values():
+        start = rng.random()
+        placed += [((n + start) / len(bucket), item)
+                   for n, item in enumerate(bucket)]
+    order = [item for _, item in sorted(placed, key=lambda pair: pair[0])]
+
+    size = len(order)
+
+    def meets(i: int) -> bool:
+        return key(order[i % size]) == key(order[(i + 1) % size])
+
+    # Two of a kind that still meet, the last and the first included: swap the
+    # second for the nearest item that sits there without meeting a neighbour
+    # of its own, and leave them be if nothing does.
+    for i in range(size):
+        if not meets(i):
+            continue
+        second = (i + 1) % size
+        for step in range(2, size):
+            other = (i + step) % size
+            order[second], order[other] = order[other], order[second]
+            if not any(meets(j) for j in (i, second, other - 1, other)):
+                break
+            order[second], order[other] = order[other], order[second]
+    return order
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--start", default=None, help="first date (YYYY-MM-DD)")
@@ -2428,7 +2609,7 @@ def main() -> int:
         return 1
 
     tier = build_bom_tier(bom)
-    quotes = spread(quotes, seed=20260102, key=lambda q: q["speaker"])
+    quotes = space_out(quotes, seed=20260102, key=lambda q: q["speaker"])
 
     days: dict[str, dict] = {}
     for offset in range(args.days):

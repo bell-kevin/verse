@@ -5,7 +5,8 @@ The other tests hold the rules that judge a verse or a paragraph to cases a
 reader ruled on. This one holds the plumbing around those rules to cases in
 code: what a week's title says about its dates and its chapters, which day of
 the Book of Mormon calendar lands on which verse, which manual and which
-conference a date reaches for, how a passage is cited and linked.
+conference a date reaches for, which of a conference's links are talks, how
+its quotes are spaced, how a passage is cited and linked.
 
 None of it is hard, and all of it is the kind of thing that is right until
 somebody touches it. The day index in `bom_for` is the plainest example: the
@@ -207,6 +208,38 @@ def _():
     return (apart, out == again, same_verses)
 
 
+def _speaker(quote):
+    return quote["ref"].split()[0]
+
+
+def _apart_all_round(out):
+    """No two neighbours share a speaker -- the last and the first included,
+    since the calendar deals the list out as a circle."""
+    return all(_speaker(x) != _speaker(y) for x, y in zip(out, out[1:] + out[:1]))
+
+
+@case("spacing out the quotes keeps speakers apart all the way round", (True, True, True))
+def _():
+    pool = [{"ref": f"{who} {n}"} for who in "abc" for n in range(4)]
+    out = builder.space_out(pool, seed=1, key=_speaker)
+    again = builder.space_out(pool, seed=1, key=_speaker)
+    same_quotes = sorted(q["ref"] for q in out) == sorted(q["ref"] for q in pool)
+    return (_apart_all_round(out), out == again, same_quotes)
+
+
+@case("one speaker far ahead of the rest still never runs two days", (True, True))
+def _():
+    # The shape of April 2026: thirteen quotes from one speaker, seven from a
+    # few, three from many. Dealt round-robin, the end of the list was the
+    # thirteen alone, seven days running, and the start was them again.
+    sizes = {"p": 13, "a": 7, "b": 7, "c": 7} | {f"s{n}": 3 for n in range(30)}
+    pool = [{"ref": f"{who} {n}"} for who, count in sizes.items() for n in range(count)]
+    results = [builder.space_out(pool, seed=seed, key=_speaker) for seed in range(50)]
+    whole = all(sorted(q["ref"] for q in out) == sorted(q["ref"] for q in pool)
+                for out in results)
+    return (all(_apart_all_round(out) for out in results), whole)
+
+
 # ---------- which manual, which conference ----------
 
 @case("the four-year cycle from its epoch",
@@ -232,6 +265,27 @@ def _():
 @case("the month conference is held already counts", [(2026, 10), (2026, 4)])
 def _():
     return list(builder.conference_candidates(dt.date(2026, 10, 1), depth=2))
+
+
+@case("a conference's talks are counted without its session pages",
+      ["/general-conference/2026/10/11christofferson",
+       "/general-conference/2026/10/12gong",
+       "/general-conference/2026/10/210rasband"])
+def _():
+    # Cut down from the October 2026 index: a session's own tile, the business
+    # item and two talks inside it, and a talk linked twice.
+    body = (
+        '<li data-content-type="general-conference-session"><ul class="doc-map"><li>'
+        '<a href="/study/general-conference/2026/10/saturday-morning-session?lang=eng">'
+        '</a></li><li data-content-type="general-conference-business">'
+        '<a href="/study/general-conference/2026/10/11christofferson?lang=eng"></a></li>'
+        '<li data-content-type="general-conference-talk">'
+        '<a href="/study/general-conference/2026/10/12gong?lang=eng"></a></li>'
+        '<li data-content-type="general-conference-talk">'
+        '<a href="/study/general-conference/2026/10/210rasband?lang=eng"></a>'
+        '<a href="/study/general-conference/2026/10/210rasband?lang=eng"></a></li>'
+        '<a href="/study/general-conference/2026/04/12oaks?lang=eng"></a>')
+    return builder.talk_uris_in(body, 2026, 10)
 
 
 # ---------- rendering ----------
