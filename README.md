@@ -443,30 +443,60 @@ things that only makes sense next to the paragraph before it:
   the same reason the subjects are refused: *Their example has stayed with me*
   is as unreadable cold as *They stayed with me*. It cost this conference's
   pool nothing, finding no paragraph the rest of the test was not already
-  turning down;
+  turning down. An object behind a preposition is the same thing — *To him, and
+  to all who feel that same ache* — and so is an opening *it* that its own
+  sentence never fills, the question the scripture cards ask above: *It is
+  exactly how the Lord revealed it to the Prophet Joseph Smith* never says what
+  *it* is, where *It is our faith in Jesus Christ that gives us the courage…*
+  does;
 - an adverb opener — *Tragically,…* almost always continues a story;
+- a scene from a story, set by the time it opens on — *Thirty-nine years ago,
+  President Dallin H. Oaks taught me about the character of Jesus Christ in a
+  way I will never forget* is the first line of one, and what he taught is in
+  the paragraphs after it; *The next morning, I called my mission president*
+  and *In the late 1980s, Mr. Martin developed severe heart failure* are scenes
+  from the middle. *After…* and *Later* were always refused for this, and these
+  are the rest of its shapes: a time ago, a decade, the next or the following
+  day, so many days later, soon after, one evening. A year on its own is not
+  one of them, because it dates a teaching as often as it starts a story — *In
+  October 2024, President Dallin H. Oaks gave the following counsel*;
 - a demonstrative pointing at an occasion the paragraph never names — *remember
   that day in your life*, *at that moment*, *these stories*. A talk is built out
   of stories, and the paragraph after a story refers back to it instead of
   retelling it, so this is the commonest way a conference paragraph reaches out
   of itself. What fills one is the paragraph saying which occasion it means: the
-  word itself earlier in its own text (*The next morning … at church that
-  morning*), a clause or an *of* after it (*that day when a priesthood leader
-  felt impressed*, *that moment of weakness*), or an occasion still ahead, which
-  no story can already have told (*That day will be filled with joy for the
-  righteous*). *This day* and *this moment* are left alone: they are the ones
-  the speaker is standing in. Words for something already told — *experience*,
-  *story*, *visit* — cannot mean now, so *this experience* and *these stories*
-  point back exactly as *that experience* does;
+  word itself earlier in its own text (*sacred spiritual experiences … Because
+  of those experiences*), a clause or an *of* after it (*that day when a
+  priesthood leader felt impressed*, *that moment of weakness*), or an occasion
+  still ahead, which no story can already have told (*That day will be filled
+  with joy for the righteous*). *This day* and *this moment* are left alone:
+  they are the ones the speaker is standing in. Words for something already
+  told — *experience*, *story*, *visit* — cannot mean now, so *this experience*
+  and *these stories* point back exactly as *that experience* does;
+- background set in somebody else's day and never brought back to the
+  reader's — *The Apostle Paul noted in his day that someone with a firm belief
+  in Christ could eat food sacrificed to idols … But he cautioned the disciples
+  to abstain anyway* says what held then and stops before why, or what it asks
+  of anyone now. A paragraph that comes back to *us* or *you* or *today* has
+  answered that itself;
 - storytelling rather than counsel, spotted by a subject-and-past-tense-verb
-  pair in the opening — *he told*, *we went*, *I felt*, *she saw*. The verbs are
-  named one by one rather than matched as any past tense, because "-ed" alone
-  throws out the counsel that is phrased in it: *I have learned*, *I promised*;
+  pair in the opening — *he told*, *we went*, *I felt*, *she saw*, *he reminded
+  me*. The verbs are named one by one rather than matched as any past tense,
+  because "-ed" alone throws out the counsel that is phrased in it: *I have
+  learned*, *I promised*. A verb joins the list only when a sweep finds it in
+  nothing but stories; *called*, *read* and *taught* each introduce scripture as
+  often as they tell one. A reply told in sequence is the same thing anywhere
+  in the paragraph — *President Caballero read to me the account of the widow's
+  mite and then said…* is a conversation retold, not the lesson drawn from it;
 - a dangling half-quotation — an odd number of quotation marks, or a paragraph
   that opens inside one;
 - an academic aside — anything carrying `(see …)` or `(compare …)`;
 - a list picked up several paragraphs later — *Second, the question is
-  asked…* — which says nothing on its own;
+  asked…* — which says nothing on its own; or picked up by naming its item
+  instead of counting it off — *The third principle is to be a light*, *My
+  second observation is that…*. The ordinal is lower case in a list and
+  capitalised in a name, which is what keeps *The Second Comforter Jesus speaks
+  of is Himself*;
 - a paragraph about the talk it sits in: what the speaker will cover, what will
   appear in *the published version of my message*, what is left of their time.
   It reads as housekeeping anywhere but in its place;
@@ -475,7 +505,18 @@ things that only makes sense next to the paragraph before it:
   counterpart of the closing formula below, but unlike a closing there is
   rarely a teaching inside one to salvage, so it is simply refused;
 - the furniture of a session rather than the preaching in it — *the choir*,
-  *we have just heard*, *welcome to this*.
+  *we have just heard*, *welcome to this*, and any session that is *this* one:
+  *As we begin this opening session…*, *Following this session of general
+  conference, the first episode of a dynamic video series … will premiere*. A
+  session is only ever *this* one from the pulpit, and the card is read on some
+  other day.
+
+The closing quotation mark is the curly one, because that is the one the Church
+typesets. For the card's first two months the rule asked only for a straight
+one, which no talk uses, so every paragraph that closed on someone's words was
+refused for its punctuation — a fifth to a quarter of every conference, whatever
+it said. The speakers who build to a scripture lost all but their shortest
+lines, and Elder Soares's October 2026 talk lost every paragraph it had.
 
 **How much teaching does it carry?** What survives is scored on the turns of
 phrase a talk is actually remembered by:
@@ -532,7 +573,11 @@ the ones members return to, so his talk gives up to **12**; a counselor in the
 First Presidency **9**; a member of the Quorum of the Twelve **7**; everyone
 else **3**. Every quota is several deep, so any talk with something to say is
 heard from — no speaker who stood at that pulpit and taught goes unquoted,
-however the scoring happened to fall.
+however the scoring happened to fall. What a quota cannot do is find a paragraph
+that is not there. A talk whose teaching all runs longer than a card holds, with
+nothing shorter left but statistics and the stories around them, goes unquoted
+rather than be represented by its weakest paragraph. President Christofferson's
+October 2026 talk, on gambling, is one.
 
 A floor of 1.0 applies before any quota does, and it matters more than it looks:
 a session's opening and closing are talks like any other to the filters above,
@@ -542,9 +587,16 @@ that a strong quote comes round twice in six months than that one of those runs
 once.
 
 The pool is then shuffled and spread by speaker, so the same voice does not turn
-up two days running. **The April 2026 conference yields 131 quotes from 34 talks
-by 32 speakers**, so a quote comes round again about every four months. Raise
-`--conferences` if you would rather trade freshness for variety.
+up two days running. Each speaker's quotes are spaced evenly around the
+calendar at their own interval — twelve quotes come round every twelve or
+thirteen days, three every fifty — and the calendar is a circle, so that holds
+from its last day back round to its first. They used to be dealt round-robin,
+which is even only while every speaker still has something left: the April 2026
+pool held thirteen quotes from President Oaks and no more than seven from
+anyone else, so each turn of the calendar ended on him seven days running.
+**The October 2026 conference yields 155 quotes from 36 talks by 35 speakers**,
+so a quote comes round again about every five months. Raise `--conferences` if
+you would rather trade freshness for variety.
 
 ### The same date always gives the same reading
 
@@ -602,11 +654,14 @@ to quote, and only one of them is a date:
 
 So the builder walks candidate sessions newest-first and takes the first one
 that actually returns a full set of talks — at least 20, so a half-posted
-conference is not chosen while it is still going up. A session that 404s or is
-still appearing is treated as unavailable rather than assumed to arrive on a
-fixed publication lag. Between conference weekend and the talks appearing, it
-simply keeps quoting the previous conference; the changeover then happens on its
-own within a few days, with no date to keep in step by hand.
+conference is not chosen while it is still going up. The count is of talks
+alone: a conference's index also links each session's own page, and counting
+those made October 2026's 38 talks look like 42, and the Monday after it, with
+no talk posted yet, look like four. A session that 404s or is still appearing is
+treated as unavailable rather than assumed to arrive on a fixed publication
+lag. Between conference weekend and the talks appearing, it simply keeps
+quoting the previous conference; the changeover then happens on its own within
+a few days, with no date to keep in step by hand.
 
 The refetch runs Mondays and Thursdays, which bounds how long after publication
 a new conference takes to show up.
@@ -626,7 +681,7 @@ from a `file://` URL.
 
 The image URLs are IIIF, so the builder asks for the width it actually serves
 (480px, just under twice the 272px the card displays it at) rather than taking
-whatever size the page happened to link. That is currently 34 files and 767 KB —
+whatever size the page happened to link. That is currently 36 files and 803 KB —
 one photo per talk that contributed a quote, fetched once and skipped on later
 builds since a talk's photo never changes. A talk whose every paragraph was
 filtered out can never be shown, so its photo is never downloaded. When a new
@@ -716,7 +771,7 @@ Two cases get no cushion, for opposite reasons:
 - **A verse whose neighbour above would fill the screen on its own** keeps its
   own anchor and takes the clipping, because being cut off at the top beats
   starting below the bottom. This is the escape hatch, and it is meant to be
-  rare: 4 links out of 1,141 across the two-year calendar. It has been the
+  rare: 8 links out of 1,112 across the two-year calendar. It has been the
   other way round. When the limit was a flat 400 characters it cut straight
   through the middle of how long a paragraph actually runs — Alma 57:26 is 402
   — and 60 links were quietly taking the clipping, a fifth of the conference
@@ -971,9 +1026,13 @@ Its cases exist because this card's rules cut as fine as the verses' do. A
 pattern written to refuse *remember that day in your life* also wants to refuse
 *That day will be filled with joy for the righteous*, which needs no paragraph
 before it; one written to keep *at church that morning* also keeps the *that* of
-*the perspective that time gives*, which is not a pointer at all. Both sides of
-every line are pinned, so a later widening of the rule fails here rather than in
-the calendar.
+*the perspective that time gives*, which is not a pointer at all. One written to
+refuse *The third principle is to be a light* also wants *The Second Comforter
+Jesus speaks of is Himself*, which is a name and not a list; one written to
+refuse *Thirty-nine years ago* also wants *In October 2024, President Dallin H.
+Oaks gave the following counsel*, which dates a teaching. Both sides of every
+line are pinned, so a later widening of the rule fails here rather than in the
+calendar.
 
 ### Checking where a link lands
 
@@ -1017,10 +1076,11 @@ python tools/test_calendar.py            # no network, no cache needed
 The plumbing around the rules above, held to cases in code rather than to
 verses: what a week's title says about its dates and its chapters, which day of
 the Book of Mormon calendar lands on which verse, which manual and which
-conference a date reaches for, how a passage is cited and linked. None of it is
-hard, and all of it is the kind of thing that is right until somebody touches
-it — the ordinary-day index in `bom_for` is one subtraction away from skipping a
-verse every fortnight, and nothing else would notice for a year.
+conference a date reaches for, which of a conference's links are talks, how its
+quotes are spaced, how a passage is cited and linked. None of it is hard, and
+all of it is the kind of thing that is right until somebody touches it — the
+ordinary-day index in `bom_for` is one subtraction away from skipping a verse
+every fortnight, and nothing else would notice for a year.
 
 ## Licensing, and what the licence does not cover
 

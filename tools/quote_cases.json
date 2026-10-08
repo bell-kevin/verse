@@ -81,9 +81,17 @@
       "reference": "Steven J. Lund, \"Divine Authority, Sublime Young Men\" (April 2025), p_vqEMC",
       "uri": "/general-conference/2025/04/22lund",
       "paragraph": "p_vqEMC",
-      "verdict": "keep",
-      "why": "'No one expected the bishop's family to be at church that morning' -- the paragraph opened on 'The next morning', so it has already said which.",
+      "verdict": "refuse",
+      "why": "Its 'that morning' is filled -- the paragraph opened on 'The next morning', so it has already said which, and `unnamed_occasion` keeps it. It goes out all the same, because 'The next morning' opens the next scene of a story: whose little girl, and why the bishop's family might stay home, are in the paragraphs before. Uchtdorf below now holds the exemption this case used to.",
       "text": "The next morning their ward members gathered for sacrament meeting filled with compassion, also suffering over the loss of this perfect little girl. No one expected the bishop’s family to be at church that morning, but a couple of minutes before the meeting started, they quietly entered and took their place."
+    },
+    {
+      "reference": "Dieter F. Uchtdorf, \"Encounter at the Empty Tomb\" (April 2026), p_zly6F",
+      "uri": "/general-conference/2026/04/41uchtdorf",
+      "paragraph": "p_zly6F",
+      "verdict": "keep",
+      "why": "'Because of those experiences' -- named a sentence earlier in the same paragraph, 'sacred spiritual experiences and knowledge', so the 'those' has its answer at hand. The exemption for an occasion the paragraph names itself, on a paragraph that is otherwise a quote.",
+      "text": "The Savior has entrusted each of us personally with sacred spiritual experiences and knowledge. Because of those experiences, we can see for ourselves the meaning of the empty tomb: that Jesus Christ lives and is actively blessing all who seek Him."
     },
     {
       "reference": "Gregorio E. Casillas, \"God Loves All His Children\" (October 2024), p_m8wzU",
@@ -117,6 +125,166 @@
       "verdict": "keep",
       "why": "'In this day of confusion and commotion' -- the same deictic 'this', in the other word the rule leaves alone.",
       "text": "In this day of confusion and commotion, I testify that the temple is His holy house and will help preserve us, protect us, and prepare us for the glorious day when, with all His holy angels, our Savior returns in majesty, power, and great glory. In the name of Jesus Christ, amen."
+    },
+    {
+      "reference": "Ulisses Soares, \"A Higher and Holier Fast\" (October 2026), p_a8hXF",
+      "uri": "/general-conference/2026/10/17soares",
+      "paragraph": "p_a8hXF",
+      "verdict": "keep",
+      "why": "Ends on a curly closing quotation mark, as every paragraph that closes on someone's words does. Asking for the straight one instead refused a fifth of the conference whatever it said, this whole talk among it.",
+      "text": "What a tender promise: light after darkness, healing after weariness, and the comforting assurance that when we call upon the Lord, He is near. President Joseph F. Smith taught that proper fasting “would … place the body in subjection to the spirit, and so promote communion with the Holy Ghost” and that “this law would bring [us] nearer to God.”"
+    },
+    {
+      "reference": "Neil L. Andersen, \"Cherishing Life\" (April 2025), p_wnNG2",
+      "uri": "/general-conference/2025/04/21andersen",
+      "paragraph": "p_wnNG2",
+      "verdict": "refuse",
+      "why": "Ends on a closing quotation mark too, but opens inside the quotation: the tail of a statement begun in the paragraph before. Accepting the curly mark must not let half a quotation through.",
+      "text": "A competent physician determines that the fetus has severe defects that will not allow the baby to survive beyond birth.”"
+    },
+    {
+      "reference": "Clark G. Gilbert, \"Teach Truth with Love\" (October 2026), p_ivQn2",
+      "uri": "/general-conference/2026/10/59gilbert",
+      "paragraph": "p_ivQn2",
+      "verdict": "refuse",
+      "why": "'The third principle is to be a light.' Read cold, the card promises a list it never shows -- the counting-off ENUMERATION refuses, in the form that names the item.",
+      "text": "The third principle is to be a light. President Nelson taught: “Let your skeptical friends see how much you love the Lord and His gospel. Surprise their doubting hearts with your believing heart!” The best way to help someone else keep their covenants is to keep your covenants. As Sister Tamara Runia reminded us, “Stay at the tree, … continue to beckon to those you love … that eating the fruit is a happy thing!”"
+    },
+    {
+      "reference": "Clark G. Gilbert, \"Teach Truth with Love\" (October 2026), p_hcywb",
+      "uri": "/general-conference/2026/10/59gilbert",
+      "paragraph": "p_hcywb",
+      "verdict": "refuse",
+      "why": "'Now, the fourth principle is to hold to truth' -- the same, with the turn of the talk in front of it.",
+      "text": "Now, the fourth principle is to hold to truth even in our outreach. In April, President Oaks stated that showing love for others “does not mean surrendering our values. The covenants we have made inevitably position us as devoted participants in the eternal contest between truth and error.”"
+    },
+    {
+      "reference": "Gerrit W. Gong, \"'Tis Eastertide: No One Walks Alone\" (April 2026), p_eUdK0",
+      "uri": "/general-conference/2026/04/58gong",
+      "paragraph": "p_eUdK0",
+      "verdict": "keep",
+      "why": "'The Second Comforter Jesus speaks of is Himself.' An ordinal with a capital is part of a name, and the paragraph is about that, not about a list. Pinned so the rule never goes case-blind.",
+      "text": "The Second Comforter Jesus speaks of is Himself. Jesus promises, “I will not leave you comfortless: I will come to you.”"
+    },
+    {
+      "reference": "Edward Dube, \"Come unto Christ\" (October 2026), p_ocN6I",
+      "uri": "/general-conference/2026/10/45dube",
+      "paragraph": "p_ocN6I",
+      "verdict": "refuse",
+      "why": "'Thirty-nine years ago, President Dallin H. Oaks taught me about the character of Jesus Christ in a way I will never forget.' The first line of a story, and what he taught is in the paragraphs after it.",
+      "text": "Thirty-nine years ago, President Dallin H. Oaks taught me about the character of Jesus Christ in a way I will never forget."
+    },
+    {
+      "reference": "Dale G. Renlund, \"How Long Will It Be Ere They Believe Me?\" (October 2026), p_r8684",
+      "uri": "/general-conference/2026/10/21renlund",
+      "paragraph": "p_r8684",
+      "verdict": "refuse",
+      "why": "'In the late 1980s, Mr. Martin developed severe heart failure.' A decade sets a scene; the lesson Mr. Martin's heart teaches is told later.",
+      "text": "In the late 1980s, Mr. Martin developed severe heart failure. Despite the most advanced medications available, his heart could not adequately support his circulation. He would die without a heart transplant. He became my team’s patient, and the wait for a donor heart began. His condition worsened, and mechanical pumps were implanted to sustain his life."
+    },
+    {
+      "reference": "Patricio M. Giuffra, \"Trusting the Lord Through Tithes and Offerings\" (October 2026), p_lZ7z9",
+      "uri": "/general-conference/2026/10/24giuffra",
+      "paragraph": "p_lZ7z9",
+      "verdict": "refuse",
+      "why": "'The next morning, I called my mission president' -- the middle of a story, with the 'someone in her circumstances' it is about back in the paragraph before.",
+      "text": "The next morning, I called my mission president, President Fernando Caballero, to seek his counsel. In my mind, I wondered whether the Lord might have an exception for someone in her circumstances."
+    },
+    {
+      "reference": "Michael John U. Teh, \"Follow the Prophet; He Knows the Way\" (April 2026), p_u8Dun",
+      "uri": "/general-conference/2026/04/17teh",
+      "paragraph": "p_u8Dun",
+      "verdict": "keep",
+      "why": "'In October 2024, President Dallin H. Oaks gave the following counsel' dates a teaching rather than starting a story, and the counsel follows in full. A year alone is why it is kept, where a decade or a time ago is refused.",
+      "text": "In October 2024, President Dallin H. Oaks gave the following counsel: “Following Christ is not a casual or occasional practice. It is a continuous commitment and way of life that should guide us at all times and in all places. His teachings and His example define the path for every disciple of Jesus Christ. And all are invited to this path.”"
+    },
+    {
+      "reference": "Dallin H. Oaks, \"Closing Remarks\" (October 2026), p_gxEuv",
+      "uri": "/general-conference/2026/10/510oaks",
+      "paragraph": "p_gxEuv",
+      "verdict": "refuse",
+      "why": "'Following this session of general conference, the first episode of a dynamic video series, Dedicate, will premiere' -- an announcement, read on some other day entirely. It scored as a promise because of 'More will come'.",
+      "text": "Following this session of general conference, the first episode of a dynamic video series, Dedicate, will premiere worldwide in multiple languages. More will come in the months ahead, including a virtual tour of the Salt Lake Temple."
+    },
+    {
+      "reference": "Vaiangina Sikahema, \"Prophets, Seers, and Revelators\" (October 2026), p_hWszk",
+      "uri": "/general-conference/2026/10/15sikahema",
+      "paragraph": "p_hWszk",
+      "verdict": "refuse",
+      "why": "'As we begin this opening session of the 196th Semiannual General Conference' -- a session is only ever 'this' one from the pulpit.",
+      "text": "What a blessing it is to live in a time when apostles and prophets are on the earth. As we begin this opening session of the 196th Semiannual General Conference of the Church, let us not be guilty of holding “the oracles of God … as a light thing” (Doctrine and Covenants 90:5)."
+    },
+    {
+      "reference": "Ronald A. Rasband, \"Behold I Am the Light Which Ye Shall Hold Up\" (October 2024), p_z6Ad2",
+      "uri": "/general-conference/2024/10/53rasband",
+      "paragraph": "p_z6Ad2",
+      "verdict": "keep",
+      "why": "'To the many testimonies at this conference, I add my apostolic witness that Jesus Christ is the Son of God' -- 'this conference' is often the frame for a witness that stands on its own. Pinned so the session rule is not widened to the conference.",
+      "text": "To the many testimonies at this conference, I add my apostolic witness that Jesus Christ is the Son of God, our Lord and Savior, the Redeemer of all of our Father’s children. By His Atonement, Jesus Christ made it possible for us, if we are worthy, to return to the presence of our Father in Heaven and be with our families for eternity."
+    },
+    {
+      "reference": "D. Todd Christofferson, \"O Be Wise\" (October 2026), p_sQ6YV",
+      "uri": "/general-conference/2026/10/19christofferson",
+      "paragraph": "p_sQ6YV",
+      "verdict": "refuse",
+      "why": "'The Apostle Paul noted in his day ... But he cautioned the disciples to abstain anyway.' What held then, and nothing of why, or of what it asks now -- set up and never paid off.",
+      "text": "The Apostle Paul noted in his day that someone with a firm belief in Christ could eat food sacrificed to idols without intending it as a sign of idol worship; it would just be a meal. But he cautioned the disciples to abstain anyway."
+    },
+    {
+      "reference": "Quentin L. Cook, \"Integrity and Virtue Lead to Happiness\" (October 2026), p_jN1eQ",
+      "uri": "/general-conference/2026/10/46cook",
+      "paragraph": "p_jN1eQ",
+      "verdict": "keep",
+      "why": "'In our day, the application of this principle is essential' -- our day is the reader's, so this is the teaching brought home rather than left in the past.",
+      "text": "In our day, the application of this principle is essential if we are to be true lifelong disciples of Christ. We need to live our lives with integrity and follow His example. The Lord, speaking of one servant in Nauvoo, declared, “He may be trusted because of the integrity of his heart.” Preach My Gospel teaches, “Integrity includes being honest with God, yourself, your leaders, and others.”"
+    },
+    {
+      "reference": "Michael A. Dunn, \"The Ninety and Ten\" (October 2026), p_ov9vM",
+      "uri": "/general-conference/2026/10/28dunn",
+      "paragraph": "p_ov9vM",
+      "verdict": "refuse",
+      "why": "'In a gentle, reassuring tone, he reminded me of the months of preparation' -- a scene, with a 'he' the paragraph never names.",
+      "text": "In a gentle, reassuring tone, he reminded me of the months of preparation and those early-morning runs. He then kneeled down, looked me in the eye, and said something I will never forget: “I know you can do this, Mike, and I’m going to get you there.”"
+    },
+    {
+      "reference": "Clark G. Gilbert, \"Teach Truth with Love\" (October 2026), p_jco7G",
+      "uri": "/general-conference/2026/10/59gilbert",
+      "paragraph": "p_jco7G",
+      "verdict": "keep",
+      "why": "'President Jeffrey R. Holland similarly reminded us' -- a named speaker's reminder is a quotation, not a scene. Only the pronoun storyteller is refused.",
+      "text": "President Jeffrey R. Holland similarly reminded us, “Jesus clearly understood what many in our modern culture seem to forget: that there is a crucial difference between the commandment to forgive sin (which He had an infinite capacity to do) and the warning against condoning it (which He never ever did even once).”"
+    },
+    {
+      "reference": "Patricio M. Giuffra, \"Trusting the Lord Through Tithes and Offerings\" (October 2026), p_b19YT",
+      "uri": "/general-conference/2026/10/24giuffra",
+      "paragraph": "p_b19YT",
+      "verdict": "refuse",
+      "why": "'President Caballero read to me the account of the widow's mite and then said' -- a conversation retold, and 'this sister' is in the story before it.",
+      "text": "President Caballero read to me the account of the widow’s mite and then said, “Elder Giuffra, you are no one to deny this sister the blessings of the law of tithing. There are no exceptions to this commandment.”"
+    },
+    {
+      "reference": "Edward Dube, \"Come unto Christ\" (October 2026), p_x2pcP",
+      "uri": "/general-conference/2026/10/45dube",
+      "paragraph": "p_x2pcP",
+      "verdict": "refuse",
+      "why": "'To him, and to all who feel that same ache' -- 'Him' behind a preposition is still a him the reader was never introduced to.",
+      "text": "To him, and to all who feel that same ache, I invite you, please come unto Christ and embrace His promise, “that [His] joy might remain in you, and that your joy might be full.”"
+    },
+    {
+      "reference": "Jeremiah J. Morgan, \"The Infinite Power of God in Our Covenants\" (October 2026), p_iu5fv",
+      "uri": "/general-conference/2026/10/25morgan",
+      "paragraph": "p_iu5fv",
+      "verdict": "refuse",
+      "why": "'It is exactly how the Lord revealed it to the Prophet Joseph Smith' -- an 'it' its sentence never fills, the question `unfilled_it` asks of the verses.",
+      "text": "It is exactly how the Lord revealed it to the Prophet Joseph Smith: “And he shall plant in the hearts of the children the promises made to the fathers, and the hearts of the children shall turn to their fathers.”"
+    },
+    {
+      "reference": "Neil L. Andersen, \"Courage Born of Our Faith in Jesus Christ\" (October 2026), p_kWOTf",
+      "uri": "/general-conference/2026/10/43andersen",
+      "paragraph": "p_kWOTf",
+      "verdict": "keep",
+      "why": "'It is our faith in Jesus Christ that gives us the courage' -- the 'that' fills the 'it', and the sentence says what it stands for.",
+      "text": "It is our faith in Jesus Christ that gives us the courage to accept a calling from our priesthood leaders even when we feel inadequate or without sufficient time to accept the responsibility."
     }
   ]
 }
